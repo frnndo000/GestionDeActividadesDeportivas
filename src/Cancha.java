@@ -27,4 +27,26 @@ public class Cancha {
     public void setId(int nuevoId) { this.id = nuevoId ; }
     public String getNombre() { return nombre ; }
     public void setNombre(String nuevoNombre) { this.nombre = nuevoNombre ; }
+    public List<Reserva> getReservas(){return reservas;};
+    public Reserva buscarReserva(int id){
+        for (Reserva r: reservas){
+            if(r.getIdReserva() == id) return r;
+        }
+        return null;
+    }
+    public Reserva buscarReserva(LocalDate fecha, BloqueHorario bloque) {
+        for (Reserva r : reservas) {
+            if (r.getFecha().equals(fecha) && r.getBloque() == bloque) return r;
+        }
+        return null;
+    }
+    public boolean estaDisponible(LocalDate fecha, BloqueHorario bloque){
+        return buscarReserva(fecha,bloque) == null;
+    }
+    public void agregarReserva(Reserva res) {
+        if (!estaDisponible(res.getFecha(), res.getBloque())) {
+            throw new IllegalStateException("Bloque no disponible para " + res.getFecha() + " " + res.getBloque());
+        }
+        reservas.add(res);
+    }
 }

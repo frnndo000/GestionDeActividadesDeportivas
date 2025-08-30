@@ -14,12 +14,8 @@ import java.io.InputStreamReader;
  * @author Fernando
  */
 public class GestionDeCanchas {
-
-    /**
-     * @param args the command line arguments
-     * @throws java.io.IOException
-     */
     public static void main(String[] args) throws IOException {
+        SistemaGestion miSistema = new SistemaGestion() ;
         BufferedReader leer = new BufferedReader(new InputStreamReader(System.in)) ;
         
         boolean activo = true ;
@@ -34,6 +30,7 @@ public class GestionDeCanchas {
             switch(opcion) {
                 case 1 :
                     System.out.println("Haga su reserva") ;
+                    hacerReserva(miSistema, leer) ;
                     break ;
                 case 2 :
                     System.out.println("Saliendo del sistema") ;
@@ -43,6 +40,25 @@ public class GestionDeCanchas {
                     System.out.println("Opcion invalida. Intente de nuevo.");
                     break;
             }
-        }
+        }        
+    }
+    
+    public static void hacerReserva(SistemaGestion sistema, BufferedReader leer) throws IOException {
+    System.out.println("Paso 1: Ingrese su RUT") ;
+    String rutSocio = leer.readLine() ;
+        
+    System.out.println("Paso 2: Elija una cancha:") ;
+    for(Cancha canchasDisponibles : sistema.getCanchas()) { 
+        System.out.println(canchasDisponibles.getIdCancha() + ". " + canchasDisponibles.getNombre()) ; 
+    }
+    
+    int idCanchaSeleccionada = Integer.parseInt(leer.readLine()) ;
+        
+    Cancha canchaElegida = sistema.getIdCancha(idCanchaSeleccionada);
+            if (canchaElegida == null) {
+                System.out.println("Cancha no encontrada.");
+                return ;
+            }
     }
 }
+

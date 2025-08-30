@@ -4,6 +4,11 @@
  */
 package gestiondecanchas;
 
+import java.io.BufferedReader;
+import java.io.IO;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 /**
  *
  * @author Fernando
@@ -12,38 +17,32 @@ public class GestionDeCanchas {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
-    public static void main(String[] args) {
-        System.out.println("hola mundo");
+    public static void main(String[] args) throws IOException {
+        BufferedReader leer = new BufferedReader(new InputStreamReader(System.in)) ;
+        
+        boolean activo = true ;
+        
+        System.out.println("MENU PRINCIPAL") ;
+        System.out.println("Seleccione una opcion") ;
+        System.out.println("1. Reservar") ;
+        System.out.println("2. Salir") ;
+        
+        while(activo) {
+            int opcion = Integer.parseInt(leer.readLine()) ;
+            switch(opcion) {
+                case 1 :
+                    System.out.println("Haga su reserva") ;
+                    break ;
+                case 2 :
+                    System.out.println("Saliendo del sistema") ;
+                    activo = false ;
+                    break ;
+                default:
+                    System.out.println("Opcion invalida. Intente de nuevo.");
+                    break;
+            }
+        }
     }
-}
-
-public class Socio {
-    // Atributos
-    private int rut ;
-    private String nombre ;
-    private int telefono ;
-    
-    // Constructores
-    public Socio(int rut, String nombre, int telefono) {
-        this.rut = rut ;
-        this.nombre = nombre ;
-        this.telefono = telefono ;   
-    }
-    
-    public Socio(int rut, String nombre) {
-        this.rut = rut ;
-        this.nombre = nombre ;
-        this.telefono = 0 ;   
-    }
-    
-    
-    // Getters y setters
-    public int getRut() { return rut; }
-    public void setRut(int rut) { this.rut = rut; }
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public int getTelefono() { return telefono; }
-    public void setTelefono(int telefono) { this.telefono = telefono; }
-    
 }

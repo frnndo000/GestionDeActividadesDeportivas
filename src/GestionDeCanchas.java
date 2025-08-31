@@ -30,7 +30,6 @@ public class GestionDeCanchas {
             int opcion = Integer.parseInt(leer.readLine()) ;
             switch(opcion) {
                 case 1 :
-                    System.out.println("Haga su reserva") ;
                     hacerReserva(miSistema, leer) ;
                     break ;
                 case 2 :

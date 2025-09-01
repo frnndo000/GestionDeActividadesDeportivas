@@ -48,7 +48,7 @@ public class GestionDeCanchas {
     
     public static void hacerReserva(SistemaGestion sistema, BufferedReader leer) throws IOException {
         // Datos del socio
-        System.out.print("Ingrese su RUT: ");
+        System.out.print("Ingrese su RUT(sin puntos y sin guion): ");
         String rutSocio = leer.readLine();
         if (rutSocio.isEmpty()) {
             System.out.println("Error: Debe ingresar un RUT.");

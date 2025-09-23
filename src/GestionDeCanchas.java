@@ -47,7 +47,7 @@ public class GestionDeCanchas {
     }
     
     public static void hacerReserva(SistemaGestion sistema, BufferedReader leer) throws IOException {
-        // Datos del socio
+
         System.out.print("Ingrese su RUT(sin puntos ni guion): ");
         String rutSocio = leer.readLine();
         if (rutSocio.isEmpty()) {
@@ -72,8 +72,7 @@ public class GestionDeCanchas {
             sistema.agregarOActualizarSocio(socioParaReserva);
             System.out.println("¡Socio registrado con exito!");
         }
-        
-        // Selección del día
+
         System.out.println("\n=== SELECCION DEL DIA ===");
         System.out.println("1. Lunes");
         System.out.println("2. Martes");
@@ -98,11 +97,9 @@ public class GestionDeCanchas {
             }
             
             LocalDate fechaSeleccionada = obtenerProximoDiaSemana(DayOfWeek.of(opcionDia));
-            
-            // Mostrar horarios disponibles
+
             mostrarHorariosDisponibles(sistema, fechaSeleccionada);
-            
-            // Selección de horario
+
             System.out.print("\nSeleccione el horario (1-8): ");
             String inputHorario = leer.readLine();
             if (inputHorario.isEmpty()) {
@@ -118,12 +115,11 @@ public class GestionDeCanchas {
                 }
                 
                 BloqueHorario bloqueSeleccionado = BloqueHorario.values()[opcionHorario - 1];
-                
-                // Selección de cancha
+
                 System.out.println("\n=== SELECCION DE CANCHA ===");
                 System.out.println("Canchas disponibles:");
                 
-                for (Cancha cancha : sistema.getCanchas()) {
+                for (Cancha cancha : sistema.getListaCanchas()) {
                     boolean disponible = cancha.estaDisponible(fechaSeleccionada, bloqueSeleccionado);
                     String estado = disponible ? "DISPONIBLE" : "OCUPADA";
                     System.out.println(cancha.getId() + ". " + cancha.getNombre() + " - " + estado);
@@ -138,23 +134,22 @@ public class GestionDeCanchas {
                 
                 try {
                     int idCanchaSeleccionada = Integer.parseInt(inputCancha);
-                    Cancha canchaElegida = sistema.getCanchaById(idCanchaSeleccionada);
+                    Cancha canchaElegida = sistema.getCancha(idCanchaSeleccionada);
                     if (canchaElegida == null) {
                         System.out.println("Cancha no encontrada.");
                         return;
                     }
                     
-                    // Verificar disponibilidad final
                     if (!canchaElegida.estaDisponible(fechaSeleccionada, bloqueSeleccionado)) {
                         System.out.println("La cancha no está disponible en el horario seleccionado.");
                         return;
                     }
                     
-                    // Crear y agregar la reserva
                     try {
                         int nuevoId = canchaElegida.getReservas().size() + 1;
                         Reserva nuevaReserva = new Reserva(nuevoId, rutSocio, fechaSeleccionada, bloqueSeleccionado);
                         canchaElegida.agregarReserva(nuevaReserva);
+                        socioParaReserva.agregarReserva(nuevaReserva);
                         
                         System.out.println("\n RESERVA CONFIRMADA");
                         System.out.println("Cancha: " + canchaElegida.getNombre());
@@ -198,9 +193,8 @@ public class GestionDeCanchas {
         for (int i = 0; i < bloques.length; i++) {
             BloqueHorario bloque = bloques[i];
             
-            // Verificar disponibilidad en alguna cancha
             boolean disponible = false;
-            for (Cancha cancha : sistema.getCanchas()) {
+            for (Cancha cancha : sistema.getListaCanchas()) {
                 if (cancha.estaDisponible(fecha, bloque)) {
                     disponible = true;
                     break;

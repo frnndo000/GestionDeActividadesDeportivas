@@ -1,13 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Fernando
- */
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +14,20 @@ public class Cancha {
     }
     
     public int getId() { return id ; }
+    
     public void setId(int nuevoId) { this.id = nuevoId ; }
+    
     public String getNombre() { return nombre ; }
+    
     public void setNombre(String nuevoNombre) { this.nombre = nuevoNombre ; }
-    public List<Reserva> getReservas(){return reservas;};
-    public Reserva buscarReserva(int id){
-        for (Reserva r: reservas){
-            if(r.getIdReserva() == id) return r;
+    
+    public List<Reserva> getReservas() {
+        return new ArrayList<>(this.reservas); 
+    }
+    
+    public Reserva buscarReserva(int id) {
+        for (Reserva r: reservas) {
+            if (r.getIdReserva() == id) return r;
         }
         return null;
     }

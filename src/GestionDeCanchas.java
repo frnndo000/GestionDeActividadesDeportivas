@@ -101,7 +101,7 @@ public class GestionDeCanchas {
             System.out.print("\nSeleccione el horario (1-8): ");
             String inputHorario = leer.readLine();
             if (inputHorario.isEmpty()) {
-                System.out.println("Error: Debe ingresar un horario.");
+                System.out.println("Error: Debes ingresar un horario.");
                 return;
             }
             

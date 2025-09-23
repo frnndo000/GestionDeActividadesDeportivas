@@ -22,4 +22,13 @@ public class SistemaGestion {
     }
     
     public List<Cancha> getCanchas() { return canchas ; }
+    
+    public Cancha getCanchaById(int id) {
+        for (Cancha cancha : canchas) {
+            if (cancha.getId() == id) {
+                return cancha;
+            }
+        }
+        return null;
+    }
 }

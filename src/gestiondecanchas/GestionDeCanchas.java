@@ -5,6 +5,7 @@ import java.time.DayOfWeek;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class GestionDeCanchas {
     public static void main(String[] args) throws IOException {
@@ -16,12 +17,14 @@ public class GestionDeCanchas {
         while(activo) {
             System.out.println("\n=== MENU PRINCIPAL ===");
             System.out.println("1. Reservar");
-            System.out.println("2. Salir");
+            System.out.println("2. Ver reservas por socio");
+            System.out.println("3. Ver ocupacion por cancha");
+            System.out.println("4. Cancelar una reserva");
+            System.out.println("5. Salir");
             System.out.print("Seleccione una opcion: ");
             
             String input = leer.readLine();
             
-            // Validar que no esté vacío
             if (input.isEmpty()) {
                 System.out.println("Error: Debe ingresar una opcion.");
                 continue;
@@ -34,7 +37,16 @@ public class GestionDeCanchas {
                     case 1:
                         hacerReserva(miSistema, leer);
                         break;
-                    case 2:
+                    case 2: 
+                        verMisReservas(miSistema, leer);
+                        break;
+                    case 3:
+                        verOcupacionPorCancha(miSistema, leer);
+                        break;
+                    case 4:
+                        //cancelarReserva(miSistema, leer);
+                        break;
+                    case 5:
                         System.out.println("Saliendo del sistema...");
                         activo = false;
                         break;
@@ -209,4 +221,72 @@ public class GestionDeCanchas {
         }
         System.out.println("└─────┴─────────────────┴───────────────┘");
     }
+
+    public static void verOcupacionPorCancha(SistemaGestion sistema, BufferedReader leer) throws IOException {
+        System.out.println("\n--- Ver Ocupación por Cancha ---");
+
+        System.out.println("Por favor, seleccione una cancha para ver sus reservas:");
+        for (Cancha c : sistema.getListaCanchas()) {
+            System.out.println(c.getId() + ". " + c.getNombre());
+        }
+
+        try {
+            System.out.print("Ingrese el número de la cancha: ");
+            int idCancha = Integer.parseInt(leer.readLine());
+            Cancha canchaSeleccionada = sistema.getCancha(idCancha);
+
+            if (canchaSeleccionada == null) {
+                System.out.println("Error: Cancha no encontrada.");
+                return;
+            }
+
+            List<Reserva> reservasDeLaCancha = canchaSeleccionada.getReservas();
+
+            if (reservasDeLaCancha.isEmpty()) {
+                System.out.println("La cancha '" + canchaSeleccionada.getNombre() + "' no tiene reservas registradas.");
+                return;
+            }
+
+            System.out.println("\n--- Reservas para: " + canchaSeleccionada.getNombre() + " ---");
+            for (Reserva r : reservasDeLaCancha) {
+                Socio s = sistema.getSocioByRut(r.getRutSocio());
+                String nombreSocio = (s != null) ? s.getNombre() : "Socio no encontrado";
+
+                System.out.println("--------------------");
+                System.out.println("  ID Reserva: " + r.getIdReserva());
+                System.out.println("  Socio: " + nombreSocio + " (RUT: " + r.getRutSocio() + ")");
+                System.out.println("  Fecha: " + r.getFecha());
+                System.out.println("  Horario: " + r.getBloque().getDescripcion());
+            }
+            System.out.println("--------------------");
+
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Debe ingresar un ID numérico válido.");
+        }
+    }
+    
+    public static void verMisReservas(SistemaGestion sistema, BufferedReader leer) throws IOException {
+        System.out.println("\n--- Mis Reservas ---");
+        System.out.print("Ingrese su RUT para ver sus reservas: ");
+        String rut = leer.readLine();
+        Socio socio = sistema.getSocioByRut(rut);
+
+        if (socio == null || socio.getMisReservas().isEmpty()) {
+            System.out.println("No se encontraron reservas para el RUT ingresado.");
+            return;
+        }
+
+        System.out.println("\nReservas para " + socio.getNombre() + ":");
+        for (Reserva r : socio.getMisReservas()) {
+            Cancha c = sistema.getCancha(r.getIdReserva());
+            System.out.println("--------------------");
+            System.out.println("  ID Reserva: " + r.getIdReserva());
+            System.out.println("  Cancha: " + (c != null ? c.getNombre() : "Desconocida"));
+            System.out.println("  Fecha: " + r.getFecha());
+            System.out.println("  Horario: " + r.getBloque().getDescripcion());
+        }
+        System.out.println("--------------------");
+    }
+    
+    
 }

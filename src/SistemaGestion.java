@@ -56,7 +56,7 @@ public class SistemaGestion {
     public Cancha getCancha(String nombre) {
         for (Cancha cancha : this.listaCanchas) {
             if (cancha.getNombre().equalsIgnoreCase(nombre)) {
-                return cancha;
+                return cancha ;
             }
         }
         return null;

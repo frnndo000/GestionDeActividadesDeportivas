@@ -10,6 +10,7 @@ import java.util.List;
 public class GestionDeCanchas {
     public static void main(String[] args) throws IOException {
         SistemaGestion miSistema = new SistemaGestion();
+        GestionArchivos ga = new GestionArchivos(); 
         BufferedReader leer = new BufferedReader(new InputStreamReader(System.in));
         
         boolean activo = true;
@@ -35,7 +36,7 @@ public class GestionDeCanchas {
                 
                 switch(opcion) {
                     case 1:
-                        hacerReserva(miSistema, leer);
+                        hacerReserva(miSistema, leer, ga);
                         break;
                     case 2: 
                         verMisReservas(miSistema, leer);
@@ -44,7 +45,7 @@ public class GestionDeCanchas {
                         verOcupacionPorCancha(miSistema, leer);
                         break;
                     case 4:
-                        //cancelarReserva(miSistema, leer);
+                        cancelarReserva(miSistema, leer);
                         break;
                     case 5:
                         System.out.println("Saliendo del sistema...");
@@ -60,7 +61,7 @@ public class GestionDeCanchas {
         }        
     }
     
-    public static void hacerReserva(SistemaGestion sistema, BufferedReader leer) throws IOException {
+    public static void hacerReserva(SistemaGestion sistema, BufferedReader leer, GestionArchivos ga) throws IOException {
 
         System.out.print("Ingrese su RUT(sin puntos ni guion): ");
         String rutSocio = leer.readLine();
@@ -84,7 +85,8 @@ public class GestionDeCanchas {
             
             socioParaReserva = new Socio(rutSocio, nombre, telefono);
             sistema.agregarOActualizarSocio(socioParaReserva);
-            System.out.println("¡Socio registrado con exito!");
+            ga.agregarSocioACSV(socioParaReserva);
+            System.out.println("¡Socio registrado y guardado con éxito!");
         }
 
         System.out.println("\n=== SELECCION DEL DIA ===");
@@ -155,7 +157,7 @@ public class GestionDeCanchas {
                     }
                     
                     if (!canchaElegida.estaDisponible(fechaSeleccionada, bloqueSeleccionado)) {
-                        System.out.println("La cancha no está disponible en el horario seleccionado.");
+                        System.out.println("La cancha no esta disponible en el horario seleccionado.");
                         return;
                     }
                     
@@ -165,6 +167,7 @@ public class GestionDeCanchas {
                         canchaElegida.agregarReserva(nuevaReserva);
                         socioParaReserva.agregarReserva(nuevaReserva);
                         
+                        ga.agregarReservaACSV(nuevaReserva);
                         System.out.println("\n RESERVA CONFIRMADA");
                         System.out.println("Cancha: " + canchaElegida.getNombre());
                         System.out.println("Fecha: " + fechaSeleccionada);
@@ -223,7 +226,7 @@ public class GestionDeCanchas {
     }
 
     public static void verOcupacionPorCancha(SistemaGestion sistema, BufferedReader leer) throws IOException {
-        System.out.println("\n--- Ver Ocupación por Cancha ---");
+        System.out.println("\n--- Ver Ocupacion por Cancha ---");
 
         System.out.println("Por favor, seleccione una cancha para ver sus reservas:");
         for (Cancha c : sistema.getListaCanchas()) {
@@ -231,7 +234,7 @@ public class GestionDeCanchas {
         }
 
         try {
-            System.out.print("Ingrese el número de la cancha: ");
+            System.out.print("Ingrese el numero de la cancha: ");
             int idCancha = Integer.parseInt(leer.readLine());
             Cancha canchaSeleccionada = sistema.getCancha(idCancha);
 
@@ -261,7 +264,7 @@ public class GestionDeCanchas {
             System.out.println("--------------------");
 
         } catch (NumberFormatException e) {
-            System.out.println("Error: Debe ingresar un ID numérico válido.");
+            System.out.println("Error: Debe ingresar un ID numerico valido.");
         }
     }
     
@@ -288,5 +291,46 @@ public class GestionDeCanchas {
         System.out.println("--------------------");
     }
     
-    
+    public static void cancelarReserva(SistemaGestion sistema, BufferedReader leer) throws IOException {
+        System.out.println("\n--- Cancelar Reserva ---");
+        System.out.print("Ingrese su RUT: ");
+        String rut = leer.readLine();
+        Socio socio = sistema.getSocioByRut(rut);
+
+        if (socio == null || socio.getMisReservas().isEmpty()) {
+            System.out.println("No tiene reservas activas para cancelar.");
+            return;
+        }
+
+        verMisReservas(sistema, leer);
+        
+        try {
+            System.out.print("\nIngrese el ID de la reserva que desea cancelar: ");
+            int idParaCancelar = Integer.parseInt(leer.readLine());
+            
+            Reserva reservaParaCancelar = null;
+
+            for (Reserva r : socio.getMisReservas()) {
+                if (r.getIdReserva() == idParaCancelar) {
+                    reservaParaCancelar = r;
+                    break;
+                }
+            }
+
+            if (reservaParaCancelar != null) {
+                Cancha canchaAsociada = sistema.getCancha(reservaParaCancelar.getIdReserva());
+                if (canchaAsociada != null) {
+                    socio.cancelarReserva(reservaParaCancelar);
+                    canchaAsociada.cancelarReserva(reservaParaCancelar);
+                    System.out.println("¡Reserva ID " + idParaCancelar + " cancelada exitosamente!");
+                } else {
+                    System.out.println("Error: No se encontro la cancha asociada a esta reserva.");
+                }
+            } else {
+                System.out.println("Error: No se encontro una reserva con ese ID en su cuenta.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Debe ingresar un ID numerico válido.");
+        }
+    }
 }

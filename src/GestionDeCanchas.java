@@ -15,13 +15,13 @@ public class GestionDeCanchas {
             System.out.println("\n=== MENU PRINCIPAL ===");
             System.out.println("1. Reservar");
             System.out.println("2. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Seleccione una opcion: ");
             
             String input = leer.readLine();
             
             // Validar que no esté vacío
             if (input.isEmpty()) {
-                System.out.println("Error: Debe ingresar una opción.");
+                System.out.println("Error: Debe ingresar una opcion.");
                 continue;
             }
             
@@ -37,18 +37,18 @@ public class GestionDeCanchas {
                         activo = false;
                         break;
                     default:
-                        System.out.println("Opción inválida. Intente de nuevo.");
+                        System.out.println("Opcion invalida. Intente de nuevo.");
                         break;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Error: Debe ingresar un número válido.");
+                System.out.println("Error: Debe ingresar un numero valido.");
             }
         }        
     }
     
     public static void hacerReserva(SistemaGestion sistema, BufferedReader leer) throws IOException {
         // Datos del socio
-        System.out.print("Ingrese su RUT(sin puntos y sin guion): ");
+        System.out.print("Ingrese su RUT(sin puntos ni guion): ");
         String rutSocio = leer.readLine();
         if (rutSocio.isEmpty()) {
             System.out.println("Error: Debe ingresar un RUT.");
@@ -62,33 +62,33 @@ public class GestionDeCanchas {
             return;
         }
         
-        System.out.print("Ingrese su teléfono: ");
+        System.out.print("Ingrese su telefono: ");
         String telefono = leer.readLine();
         // El teléfono puede estar vacío según tu constructor de Socio
         
         Socio socio = new Socio(rutSocio, nombre, telefono);
         
         // Selección del día
-        System.out.println("\n=== SELECCIÓN DEL DÍA ===");
+        System.out.println("\n=== SELECCION DEL DIA ===");
         System.out.println("1. Lunes");
         System.out.println("2. Martes");
-        System.out.println("3. Miércoles");
+        System.out.println("3. Miercoles");
         System.out.println("4. Jueves");
         System.out.println("5. Viernes");
-        System.out.println("6. Sábado");
+        System.out.println("6. Sabado");
         System.out.println("7. Domingo");
-        System.out.print("Seleccione el día: ");
+        System.out.print("Seleccione el dia: ");
         
         String inputDia = leer.readLine();
         if (inputDia.isEmpty()) {
-            System.out.println("Error: Debe ingresar un día.");
+            System.out.println("Error: Debe ingresar un dia.");
             return;
         }
         
         try {
             int opcionDia = Integer.parseInt(inputDia);
             if (opcionDia < 1 || opcionDia > 7) {
-                System.out.println("Día inválido.");
+                System.out.println("Dia invalido.");
                 return;
             }
             
@@ -108,14 +108,14 @@ public class GestionDeCanchas {
             try {
                 int opcionHorario = Integer.parseInt(inputHorario);
                 if (opcionHorario < 1 || opcionHorario > 8) {
-                    System.out.println("Horario inválido.");
+                    System.out.println("Horario invalido.");
                     return;
                 }
                 
                 BloqueHorario bloqueSeleccionado = BloqueHorario.values()[opcionHorario - 1];
                 
                 // Selección de cancha
-                System.out.println("\n=== SELECCIÓN DE CANCHA ===");
+                System.out.println("\n=== SELECCION DE CANCHA ===");
                 System.out.println("Canchas disponibles:");
                 
                 for (Cancha cancha : sistema.getCanchas()) {
@@ -151,7 +151,7 @@ public class GestionDeCanchas {
                         Reserva nuevaReserva = new Reserva(nuevoId, rutSocio, fechaSeleccionada, bloqueSeleccionado);
                         canchaElegida.agregarReserva(nuevaReserva);
                         
-                        System.out.println("\n✅ RESERVA CONFIRMADA");
+                        System.out.println("\n RESERVA CONFIRMADA");
                         System.out.println("Cancha: " + canchaElegida.getNombre());
                         System.out.println("Fecha: " + fechaSeleccionada);
                         System.out.println("Horario: " + bloqueSeleccionado.getDescripcion());
@@ -162,15 +162,15 @@ public class GestionDeCanchas {
                     }
                     
                 } catch (NumberFormatException e) {
-                    System.out.println("Error: Debe ingresar un número válido para la cancha.");
+                    System.out.println("Error: Debe ingresar un número valido para la cancha.");
                 }
                 
             } catch (NumberFormatException e) {
-                System.out.println("Error: Debe ingresar un número válido para el horario.");
+                System.out.println("Error: Debe ingresar un numero valido para el horario.");
             }
             
         } catch (NumberFormatException e) {
-            System.out.println("Error: Debe ingresar un número válido para el día.");
+            System.out.println("Error: Debe ingresar un número valido para el dia.");
         }
     }
     
@@ -209,4 +209,3 @@ public class GestionDeCanchas {
         System.out.println("└─────┴─────────────────┴───────────────┘");
     }
 }
-

@@ -33,7 +33,7 @@ public class Cancha {
     }
     public Reserva buscarReserva(LocalDate fecha, BloqueHorario bloque) {
         for (Reserva r : reservas) {
-            if (r.getFecha().equals(fecha) && r.getBloque() == bloque) return r;
+            if (r.getFecha().equals(fecha) && r.getBloque() == bloque) return r ;
         }
         return null;
     }

@@ -55,18 +55,23 @@ public class GestionDeCanchas {
             return;
         }
         
-        System.out.print("Ingrese su nombre: ");
-        String nombre = leer.readLine();
-        if (nombre.isEmpty()) {
-            System.out.println("Error: Debe ingresar un nombre.");
-            return;
+        Socio socioExistente = sistema.getSocioByRut(rutSocio);
+        Socio socioParaReserva;
+        
+        if (socioExistente != null) {
+            System.out.println("Bienvenido, " + socioExistente.getNombre() + "!");
+            socioParaReserva = socioExistente;
+        } else {
+            System.out.println("Parece que eres un socio nuevo. Vamos a registrarte.");
+            System.out.print("Ingrese su nombre completo: ");
+            String nombre = leer.readLine();
+            System.out.print("Ingrese su telefono: ");
+            String telefono = leer.readLine();
+            
+            socioParaReserva = new Socio(rutSocio, nombre, telefono);
+            sistema.agregarOActualizarSocio(socioParaReserva);
+            System.out.println("¡Socio registrado con exito!");
         }
-        
-        System.out.print("Ingrese su telefono: ");
-        String telefono = leer.readLine();
-        // El teléfono puede estar vacío según tu constructor de Socio
-        
-        Socio socio = new Socio(rutSocio, nombre, telefono);
         
         // Selección del día
         System.out.println("\n=== SELECCION DEL DIA ===");
@@ -155,14 +160,14 @@ public class GestionDeCanchas {
                         System.out.println("Cancha: " + canchaElegida.getNombre());
                         System.out.println("Fecha: " + fechaSeleccionada);
                         System.out.println("Horario: " + bloqueSeleccionado.getDescripcion());
-                        System.out.println("Socio: " + nombre + " (RUT: " + rutSocio + ")");
+                        System.out.println("Socio: " + socioParaReserva.getNombre() + " (RUT: " + socioParaReserva.getRut() + ")");
                         
                     } catch (IllegalStateException e) {
                         System.out.println("Error: " + e.getMessage());
                     }
                     
                 } catch (NumberFormatException e) {
-                    System.out.println("Error: Debe ingresar un número valido para la cancha.");
+                    System.out.println("Error: Debe ingresar un numero valido para la cancha.");
                 }
                 
             } catch (NumberFormatException e) {
@@ -170,7 +175,7 @@ public class GestionDeCanchas {
             }
             
         } catch (NumberFormatException e) {
-            System.out.println("Error: Debe ingresar un número valido para el dia.");
+            System.out.println("Error: Debe ingresar un numero valido para el dia.");
         }
     }
     

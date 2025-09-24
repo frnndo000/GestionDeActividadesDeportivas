@@ -38,25 +38,15 @@ public class GestionDeCanchas {
                 int opcion = Integer.parseInt(input);
                 
                 switch(opcion) {
-                    case 1:
-                        hacerReserva(miSistema, leer, ga);
-                        break;
-                    case 2: 
-                        verMisReservas(miSistema, leer);
-                        break;
-                    case 3:
-                        verOcupacionPorCancha(miSistema, leer);
-                        break;
-                    case 4:
-                        gestionarReservas(miSistema, leer, ga);
-                        break;
-                    case 5:
+                    case 1 -> hacerReserva(miSistema, leer, ga);
+                    case 2 -> verMisReservas(miSistema, leer);
+                    case 3 -> verOcupacionPorCancha(miSistema, leer);
+                    case 4 -> gestionarReservas(miSistema, leer, ga);
+                    case 5 -> {
                         System.out.println("Saliendo del sistema...");
                         activo = false;
-                        break;
-                    default:
-                        System.out.println("Opcion invalida. Intente de nuevo.");
-                        break;
+                    }
+                    default -> System.out.println("Opcion invalida. Intente de nuevo.");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Error: Debe ingresar un numero valido.");
@@ -221,7 +211,7 @@ public class GestionDeCanchas {
     }
 
     public static void gestionarReservas(SistemaGestion sistema, BufferedReader leer, GestionArchivos ga) throws IOException {
-        System.out.println("\n--- Gestión de Reservas ---");
+        System.out.println("\n--- Gestion de Reservas ---");
         System.out.print("Para continuar, por favor ingrese su RUT: ");
         String rut = leer.readLine();
         Socio socio = sistema.getSocioByRut(rut);
@@ -233,22 +223,17 @@ public class GestionDeCanchas {
         
         imprimirReservasSocio(sistema, socio);
 
-        System.out.println("\n¿Qué desea hacer?");
+        System.out.println("\n¿Que desea hacer?");
         System.out.println("1. Modificar el horario de una reserva");
         System.out.println("2. Cancelar una reserva");
-        System.out.print("Seleccione una opción: ");
+        System.out.print("Seleccione una opcion: ");
 
         try {
             int opcion = Integer.parseInt(leer.readLine());
             switch (opcion) {
-                case 1:
-                    modificarReserva(sistema, leer, ga, socio);
-                    break;
-                case 2:
-                    cancelarReserva(sistema, leer, ga, socio);
-                    break;
-                default:
-                    System.out.println("Opcion no valida.");
+                case 1 -> modificarReserva(sistema, leer, ga, socio);
+                case 2 -> cancelarReserva(sistema, leer, ga, socio);
+                default -> System.out.println("Opcion no valida.");
             }
         } catch (NumberFormatException e) {
             System.out.println("Error: Debe ingresar un numero valido.");
@@ -332,10 +317,10 @@ public class GestionDeCanchas {
 
                 ga.actualizarArchivoReservas(sistema);
 
-                System.out.println("\n ¡Horario modificado con éxito y guardado!");
+                System.out.println("\n ¡Horario modificado con exito y guardado!");
                 System.out.println("Su reserva ID " + reservaParaModificar.getIdReserva() + " ahora es para el horario: " + nuevoBloque.getDescripcion());
             } else {
-                System.out.println("Error: El nuevo horario seleccionado no está disponible.");
+                System.out.println("Error: El nuevo horario seleccionado no esta disponible.");
             }
 
         } catch (NumberFormatException e) {

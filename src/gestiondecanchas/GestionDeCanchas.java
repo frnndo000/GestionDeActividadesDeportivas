@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 public class GestionDeCanchas {
+    
+    private static int proximoIdReserva = 0;
+    
     public static void main(String[] args) throws IOException {
         SistemaGestion miSistema = new SistemaGestion();
         GestionArchivos ga = new GestionArchivos(); 
@@ -163,7 +166,7 @@ public class GestionDeCanchas {
                     
                     try {
                         int nuevoId = canchaElegida.getReservas().size() + 1;
-                        Reserva nuevaReserva = new Reserva(nuevoId, rutSocio, fechaSeleccionada, bloqueSeleccionado);
+                        Reserva nuevaReserva = new Reserva(proximoIdReserva++, canchaElegida.getId(), socioParaReserva.getRut(), fechaSeleccionada, bloqueSeleccionado);
                         canchaElegida.agregarReserva(nuevaReserva);
                         socioParaReserva.agregarReserva(nuevaReserva);
                         
@@ -268,20 +271,24 @@ public class GestionDeCanchas {
         }
     }
     
-    public static void verMisReservas(SistemaGestion sistema, BufferedReader leer, Socio socio) throws IOException {
+    public static void verMisReservas(SistemaGestion sistema, BufferedReader leer) throws IOException {
         System.out.println("\n--- Mis Reservas ---");
         System.out.print("Ingrese su RUT para ver sus reservas: ");
         String rut = leer.readLine();
         Socio socio = sistema.getSocioByRut(rut);
-
+        
         if (socio == null || socio.getMisReservas().isEmpty()) {
             System.out.println("No se encontraron reservas para el RUT ingresado.");
             return;
         }
-
+        
+        imprimirReservasSocio(sistema, socio);
+    }
+    
+    private static void imprimirReservasSocio(SistemaGestion sistema, Socio socio) {
         System.out.println("\nReservas para " + socio.getNombre() + ":");
         for (Reserva r : socio.getMisReservas()) {
-            Cancha c = sistema.getCancha(r.getIdReserva());
+            Cancha c = sistema.getCancha(r.getIdCancha());
             System.out.println("--------------------");
             System.out.println("  ID Reserva: " + r.getIdReserva());
             System.out.println("  Cancha: " + (c != null ? c.getNombre() : "Desconocida"));
@@ -290,8 +297,6 @@ public class GestionDeCanchas {
         }
         System.out.println("--------------------");
     }
-    
-    // Dentro de la clase GestionDeCanchas.java
 
     public static void gestionarReservas(SistemaGestion sistema, BufferedReader leer, GestionArchivos ga) throws IOException {
         System.out.println("\n--- Gestión de Reservas ---");
@@ -303,9 +308,8 @@ public class GestionDeCanchas {
             System.out.println("No se encontraron reservas activas para el RUT ingresado.");
             return;
         }
-
-        // Le mostramos al usuario sus reservas para que sepa con cuál va a trabajar
-        verMisReservas(sistema, leer, socio); // Modificamos verMisReservas para que reciba al socio
+        
+        imprimirReservasSocio(sistema, socio);
 
         System.out.println("\n¿Qué desea hacer?");
         System.out.println("1. Modificar el horario de una reserva");

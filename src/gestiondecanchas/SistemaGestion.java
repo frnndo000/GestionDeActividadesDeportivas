@@ -22,17 +22,13 @@ public class SistemaGestion {
         Cancha cancha1 = new Cancha(1, "Cancha 1 - Principal");
         Cancha cancha2 = new Cancha(2, "Cancha 2 - Secundaria");
         
-        Socio socio1 = new Socio("1", "Juan Perez", "912345678");
-        Socio socio2 = new Socio("2", "Ana Garcia", "987654321");
-        
-        this.mapaSocios.put(socio1.getRut(), socio1);
-        this.mapaSocios.put(socio2.getRut(), socio2);
-        
-        Reserva reservaPrueba = new Reserva(99, "1-1", LocalDate.now(), BloqueHorario.B19_20);
-        cancha1.agregarReserva(reservaPrueba);
-        
         this.listaCanchas.add(cancha1);
         this.listaCanchas.add(cancha2);
+        
+        System.out.println("Iniciando carga de datos desde archivos CSV...");
+        GestionArchivos ga = new GestionArchivos();
+        ga.cargarSocios(this);
+        ga.cargarReservas(this);
     }
     
     public Collection<Socio> getSocios() {

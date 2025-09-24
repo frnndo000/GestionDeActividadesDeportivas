@@ -1,5 +1,5 @@
 package gestiondecanchas;
-//Mensaje de prueba
+
 public enum BloqueHorario {
     B15_16("15:00 - 16:00"),
     B16_17("16:00 - 17:00"),

@@ -20,7 +20,7 @@ public class GestionDeCanchas {
             System.out.println("1. Reservar");
             System.out.println("2. Ver reservas por socio");
             System.out.println("3. Ver ocupacion por cancha");
-            System.out.println("4. Cancelar una reserva");
+            System.out.println("4. Gestionar reservas"); // sia2.4
             System.out.println("5. Salir");
             System.out.print("Seleccione una opcion: ");
             
@@ -45,7 +45,7 @@ public class GestionDeCanchas {
                         verOcupacionPorCancha(miSistema, leer);
                         break;
                     case 4:
-                        cancelarReserva(miSistema, leer);
+                        gestionarReservas(miSistema, leer, ga);
                         break;
                     case 5:
                         System.out.println("Saliendo del sistema...");
@@ -268,7 +268,7 @@ public class GestionDeCanchas {
         }
     }
     
-    public static void verMisReservas(SistemaGestion sistema, BufferedReader leer) throws IOException {
+    public static void verMisReservas(SistemaGestion sistema, BufferedReader leer, Socio socio) throws IOException {
         System.out.println("\n--- Mis Reservas ---");
         System.out.print("Ingrese su RUT para ver sus reservas: ");
         String rut = leer.readLine();
@@ -291,7 +291,112 @@ public class GestionDeCanchas {
         System.out.println("--------------------");
     }
     
-    public static void cancelarReserva(SistemaGestion sistema, BufferedReader leer) throws IOException {
+    // Dentro de la clase GestionDeCanchas.java
+
+    public static void gestionarReservas(SistemaGestion sistema, BufferedReader leer, GestionArchivos ga) throws IOException {
+        System.out.println("\n--- Gestión de Reservas ---");
+        System.out.print("Para continuar, por favor ingrese su RUT: ");
+        String rut = leer.readLine();
+        Socio socio = sistema.getSocioByRut(rut);
+
+        if (socio == null || socio.getMisReservas().isEmpty()) {
+            System.out.println("No se encontraron reservas activas para el RUT ingresado.");
+            return;
+        }
+
+        // Le mostramos al usuario sus reservas para que sepa con cuál va a trabajar
+        verMisReservas(sistema, leer, socio); // Modificamos verMisReservas para que reciba al socio
+
+        System.out.println("\n¿Qué desea hacer?");
+        System.out.println("1. Modificar el horario de una reserva");
+        System.out.println("2. Cancelar una reserva");
+        System.out.print("Seleccione una opción: ");
+
+        try {
+            int opcion = Integer.parseInt(leer.readLine());
+            switch (opcion) {
+                case 1:
+                    modificarReserva(sistema, leer, ga, socio);
+                    break;
+                case 2:
+                    cancelarReserva(sistema, leer, ga, socio);
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Debe ingresar un número válido.");
+        }
+    }
+    
+    public static void modificarReserva(SistemaGestion sistema, BufferedReader leer, GestionArchivos ga, Socio socio) throws IOException {
+        System.out.println("\n--- Modificar Horario de Reserva ---");
+        try {
+            System.out.print("Ingrese el ID de la reserva que desea modificar: ");
+            int idParaModificar = Integer.parseInt(leer.readLine());
+
+            Reserva reservaParaModificar = null;
+            for (Reserva r : socio.getMisReservas()) {
+                if (r.getIdReserva() == idParaModificar) {
+                    reservaParaModificar = r;
+                    break;
+                }
+            }
+
+            if (reservaParaModificar == null) {
+                System.out.println("Error: No se encontró una reserva con ese ID en su cuenta.");
+                return;
+            }
+
+            Cancha canchaAsociada = sistema.buscarCancha(reservaParaModificar.getIdCancha());
+            if (canchaAsociada == null) {
+                System.out.println("Error fatal: No se encontró la cancha asociada a la reserva.");
+                return;
+            }
+
+            System.out.println("\nHorarios disponibles para la cancha '" + canchaAsociada.getNombre() + "' el día " + reservaParaModificar.getFecha() + ":");
+            // Mostramos la disponibilidad para el día de la reserva
+            for (BloqueHorario bloque : BloqueHorario.values()) {
+                // Un bloque está disponible si está libre O si es el bloque actual de la reserva que queremos cambiar
+                if (canchaAsociada.estaDisponible(reservaParaModificar.getFecha(), bloque) || bloque == reservaParaModificar.getBloque()) {
+                    System.out.println("- " + bloque.name() + " (" + bloque.getDescripcion() + ") -> DISPONIBLE");
+                } else {
+                    System.out.println("- " + bloque.name() + " (" + bloque.getDescripcion() + ") -> OCUPADO");
+                }
+            }
+
+            System.out.print("\nIngrese el nuevo bloque horario que desea (Ej: B20_21): ");
+            String nuevoBloqueTexto = leer.readLine().toUpperCase();
+            BloqueHorario nuevoBloque = BloqueHorario.valueOf(nuevoBloqueTexto);
+
+            // Verificamos que el nuevo bloque no sea el mismo que ya tenía
+            if (nuevoBloque == reservaParaModificar.getBloque()) {
+                System.out.println("El nuevo horario es el mismo que el actual. No se realizaron cambios.");
+                return;
+
+            }
+            // Verificamos que el nuevo bloque esté realmente disponible
+            if (canchaAsociada.estaDisponible(reservaParaModificar.getFecha(), nuevoBloque)) {
+                // Actualizamos el bloque en el objeto Reserva
+                reservaParaModificar.setBloque(nuevoBloque);
+
+                // Reescribimos el archivo de reservas con la información actualizada
+                ga.actualizarArchivoReservas(sistema);
+
+                System.out.println("\n✅ ¡Horario modificado con éxito y guardado!");
+                System.out.println("Su reserva ID " + reservaParaModificar.getIdReserva() + " ahora es para el horario: " + nuevoBloque.getDescripcion());
+            } else {
+                System.out.println("Error: El nuevo horario seleccionado no está disponible.");
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Debe ingresar un ID numérico válido.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: El código del bloque horario no es válido.");
+        }
+    }
+    
+    public static void cancelarReserva(SistemaGestion sistema, BufferedReader leer, GestionArchivos ga, Socio socio) throws IOException {
         System.out.println("\n--- Cancelar Reserva ---");
         System.out.print("Ingrese su RUT: ");
         String rut = leer.readLine();

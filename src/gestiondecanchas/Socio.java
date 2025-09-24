@@ -1,25 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Fernando
- */
-
 package gestiondecanchas;
+//Mensaje de prueba
+import java.util.ArrayList;
+import java.util.List;
+
 public class Socio{
-    // Atributos
     private String rut ;
     private String nombre ;
     private String telefono ;
+    private List<Reserva> misReservas;
     
-    // Constructores
     public Socio(String rut, String nombre, String telefono) {
         this.rut = rut ;
         this.nombre = nombre ;
-        this.telefono = telefono ;   
+        this.telefono = telefono ;
+        this.misReservas = new ArrayList<>();
     }
     
     public Socio(String rut, String nombre) {
@@ -28,7 +22,18 @@ public class Socio{
         this.telefono = "No especifica" ;   
     }
     
-    // Getters y setters
+    public void agregarReserva(Reserva reserva) {
+        this.misReservas.add(reserva);
+    }
+    
+    public List<Reserva> getMisReservas() {
+        return new ArrayList<>(this.misReservas); 
+    }
+    
+    public void cancelarReserva(Reserva reserva) {
+        this.misReservas.remove(reserva);
+    }
+    
     public String getRut() { return rut; }
     public void setRut(String rut) { this.rut = rut; }
     public String getNombre() { return nombre; }

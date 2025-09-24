@@ -1,43 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Fernando
- */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Fernando
- */
-
 package gestiondecanchas;
-
+//Mensaje de prueba
 import java.time.LocalDate;
 
 public class Reserva {
-    // Atributos
-    private int idReserva ;
-    private String rutSocio ;
-    private LocalDate fecha ;
-    private BloqueHorario bloque ;
+    private int idReserva;
+    private int idCancha;
+    private String rutSocio;
+    private LocalDate fecha;
+    private BloqueHorario bloque;
     
-    // Constructor
-    public Reserva(int idReserva, String rutSocio, LocalDate fecha, BloqueHorario bloque) {
+    public Reserva(int idReserva, int idCancha, String rutSocio, LocalDate fecha, BloqueHorario bloque) {
         this.idReserva = idReserva;
+        this.idCancha = idCancha;
         this.rutSocio = rutSocio;
         this.fecha = fecha;
         this.bloque = bloque;
     }
     
-    // Getters y Setters
+    public int getIdCancha() { return idCancha; }
     public int getIdReserva() { return idReserva; }
     public void setIdReserva(int idReserva) { this.idReserva = idReserva; }
     public LocalDate getFecha() { return fecha; }

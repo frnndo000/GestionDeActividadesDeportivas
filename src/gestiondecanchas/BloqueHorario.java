@@ -1,14 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Fernando
- */
 package gestiondecanchas;
-
+//Mensaje de prueba
 public enum BloqueHorario {
     B15_16("15:00 - 16:00"),
     B16_17("16:00 - 17:00"),

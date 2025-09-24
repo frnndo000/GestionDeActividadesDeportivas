@@ -1,15 +1,14 @@
 package gestiondecanchas;
-
+//Mensaje de prueba
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Collection;
 import java.util.Map;
-import java.time.LocalDate;
         
 public class SistemaGestion {
-    private List<Cancha> listaCanchas ;
-    private Map<String, Socio> mapaSocios;
+    private final List<Cancha> listaCanchas ;
+    private final Map<String, Socio> mapaSocios;
     
     public SistemaGestion() {
         this.listaCanchas = new ArrayList<>() ;

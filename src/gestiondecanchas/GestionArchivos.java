@@ -1,12 +1,11 @@
 package gestiondecanchas;
-
+//Mensaje de prueba
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.util.Collection;
 
 public class GestionArchivos {
     private static final String ARCHIVO_SOCIOS = "socios.csv";
@@ -44,8 +43,8 @@ public class GestionArchivos {
                     Socio socio = sistema.getSocioByRut(rutSocio);
 
                     if (cancha != null && socio != null) {
-                        Reserva reserva = new Reserva(idReserva, rutSocio, fecha, bloque);
-                        cancha.agregarReserva(reserva);
+                        Reserva reserva = new Reserva(idReserva, idCancha, rutSocio , fecha, bloque);
+                        cancha.agregarReservaDesdeArchivo(reserva);
                         socio.agregarReserva(reserva);
                     }
                 }
@@ -56,35 +55,39 @@ public class GestionArchivos {
         }
     }
     
-    public void guardarSocios(SistemaGestion sistema) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_SOCIOS))) {
-            Collection<Socio> socios = sistema.getSocios();
-            if (socios != null) {
-                for (Socio socio : socios) {
-                    pw.println(socio.getRut() + "," + socio.getNombre() + "," + socio.getTelefono());
-                }
-            }
-            System.out.println(">> Socios guardados exitosamente en " + ARCHIVO_SOCIOS);
+    public void agregarSocioACSV(Socio socio) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_SOCIOS, true))) {
+            pw.println(socio.getRut() + "," + socio.getNombre() + "," + socio.getTelefono());
         } catch (IOException e) {
-            System.err.println("Error al guardar socios: " + e.getMessage());
+            System.err.println("Error al agregar socio al archivo: " + e.getMessage());
         }
     }
-
-    public void guardarReservas(SistemaGestion sistema) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_RESERVAS))) {
+    
+    public void agregarReservaACSV(Reserva reserva) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_RESERVAS, true))) {
+            pw.println(reserva.getIdReserva() + "," +
+                       reserva.getRutSocio() + "," +
+                       reserva.getIdCancha() + "," +
+                       reserva.getFecha() + "," +
+                       reserva.getBloque().name());
+        } catch (IOException e) {
+            System.err.println("Error al agregar reserva al archivo: " + e.getMessage());
+        }
+    }
+    
+    public void actualizarArchivoReservas(SistemaGestion sistema) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_RESERVAS, false))) {
             for (Cancha cancha : sistema.getListaCanchas()) {
                 for (Reserva reserva : cancha.getReservas()) {
                     pw.println(reserva.getIdReserva() + "," +
                                reserva.getRutSocio() + "," +
-                               cancha.getId() + "," +
+                               reserva.getIdCancha() + "," +
                                reserva.getFecha() + "," +
                                reserva.getBloque().name());
                 }
             }
-            System.out.println(">> Reservas guardadas exitosamente en " + ARCHIVO_RESERVAS);
         } catch (IOException e) {
-            System.err.println("Error al guardar reservas: " + e.getMessage());
+            System.err.println("Error al actualizar reservas.csv: " + e.getMessage());
         }
     }
-    
 }

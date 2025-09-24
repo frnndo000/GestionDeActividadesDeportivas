@@ -9,7 +9,7 @@ import java.util.List;
 
 public class GestionDeCanchas {
     
-    private static int proximoIdReserva = 100;
+    private static int proximoIdReserva = 10;
     
     public static void main(String[] args) throws IOException {
         SistemaGestion miSistema = new SistemaGestion();

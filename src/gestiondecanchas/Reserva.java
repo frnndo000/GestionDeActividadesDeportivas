@@ -18,6 +18,8 @@
  * @author Fernando
  */
 
+package gestiondecanchas;
+
 import java.time.LocalDate;
 
 public class Reserva {

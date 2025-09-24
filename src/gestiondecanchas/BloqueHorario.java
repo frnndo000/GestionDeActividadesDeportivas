@@ -7,6 +7,8 @@
  *
  * @author Fernando
  */
+package gestiondecanchas;
+
 public enum BloqueHorario {
     B15_16("15:00 - 16:00"),
     B16_17("16:00 - 17:00"),

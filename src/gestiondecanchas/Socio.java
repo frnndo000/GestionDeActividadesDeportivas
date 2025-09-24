@@ -7,6 +7,8 @@
  *
  * @author Fernando
  */
+
+package gestiondecanchas;
 public class Socio{
     // Atributos
     private String rut ;

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class GestionDeCanchas {
     
-    private static int proximoIdReserva = 0;
+    private static int proximoIdReserva = 100 ;
     
     public static void main(String[] args) throws IOException {
         SistemaGestion miSistema = new SistemaGestion();
@@ -326,10 +326,10 @@ public class GestionDeCanchas {
                     cancelarReserva(sistema, leer, ga, socio);
                     break;
                 default:
-                    System.out.println("Opción no válida.");
+                    System.out.println("Opcion no valida.");
             }
         } catch (NumberFormatException e) {
-            System.out.println("Error: Debe ingresar un número válido.");
+            System.out.println("Error: Debe ingresar un numero valido.");
         }
     }
     
@@ -348,20 +348,18 @@ public class GestionDeCanchas {
             }
 
             if (reservaParaModificar == null) {
-                System.out.println("Error: No se encontró una reserva con ese ID en su cuenta.");
+                System.out.println("Error: No se encontro una reserva con ese ID en su cuenta.");
                 return;
             }
 
-            Cancha canchaAsociada = sistema.buscarCancha(reservaParaModificar.getIdCancha());
+            Cancha canchaAsociada = sistema.getCancha(reservaParaModificar.getIdCancha());
             if (canchaAsociada == null) {
-                System.out.println("Error fatal: No se encontró la cancha asociada a la reserva.");
+                System.out.println("Error fatal: No se encontro la cancha asociada a la reserva.");
                 return;
             }
 
             System.out.println("\nHorarios disponibles para la cancha '" + canchaAsociada.getNombre() + "' el día " + reservaParaModificar.getFecha() + ":");
-            // Mostramos la disponibilidad para el día de la reserva
             for (BloqueHorario bloque : BloqueHorario.values()) {
-                // Un bloque está disponible si está libre O si es el bloque actual de la reserva que queremos cambiar
                 if (canchaAsociada.estaDisponible(reservaParaModificar.getFecha(), bloque) || bloque == reservaParaModificar.getBloque()) {
                     System.out.println("- " + bloque.name() + " (" + bloque.getDescripcion() + ") -> DISPONIBLE");
                 } else {
@@ -373,52 +371,35 @@ public class GestionDeCanchas {
             String nuevoBloqueTexto = leer.readLine().toUpperCase();
             BloqueHorario nuevoBloque = BloqueHorario.valueOf(nuevoBloqueTexto);
 
-            // Verificamos que el nuevo bloque no sea el mismo que ya tenía
             if (nuevoBloque == reservaParaModificar.getBloque()) {
                 System.out.println("El nuevo horario es el mismo que el actual. No se realizaron cambios.");
                 return;
-
             }
-            // Verificamos que el nuevo bloque esté realmente disponible
+            
             if (canchaAsociada.estaDisponible(reservaParaModificar.getFecha(), nuevoBloque)) {
-                // Actualizamos el bloque en el objeto Reserva
                 reservaParaModificar.setBloque(nuevoBloque);
 
-                // Reescribimos el archivo de reservas con la información actualizada
                 ga.actualizarArchivoReservas(sistema);
 
-                System.out.println("\n✅ ¡Horario modificado con éxito y guardado!");
+                System.out.println("\n ¡Horario modificado con éxito y guardado!");
                 System.out.println("Su reserva ID " + reservaParaModificar.getIdReserva() + " ahora es para el horario: " + nuevoBloque.getDescripcion());
             } else {
                 System.out.println("Error: El nuevo horario seleccionado no está disponible.");
             }
 
         } catch (NumberFormatException e) {
-            System.out.println("Error: Debe ingresar un ID numérico válido.");
+            System.out.println("Error: Debe ingresar un ID numerico valido.");
         } catch (IllegalArgumentException e) {
-            System.out.println("Error: El código del bloque horario no es válido.");
+            System.out.println("Error: El codigo del bloque horario no es valido.");
         }
     }
     
     public static void cancelarReserva(SistemaGestion sistema, BufferedReader leer, GestionArchivos ga, Socio socio) throws IOException {
-        System.out.println("\n--- Cancelar Reserva ---");
-        System.out.print("Ingrese su RUT: ");
-        String rut = leer.readLine();
-        Socio socio = sistema.getSocioByRut(rut);
-
-        if (socio == null || socio.getMisReservas().isEmpty()) {
-            System.out.println("No tiene reservas activas para cancelar.");
-            return;
-        }
-
-        verMisReservas(sistema, leer);
-        
         try {
             System.out.print("\nIngrese el ID de la reserva que desea cancelar: ");
             int idParaCancelar = Integer.parseInt(leer.readLine());
             
             Reserva reservaParaCancelar = null;
-
             for (Reserva r : socio.getMisReservas()) {
                 if (r.getIdReserva() == idParaCancelar) {
                     reservaParaCancelar = r;
@@ -427,19 +408,18 @@ public class GestionDeCanchas {
             }
 
             if (reservaParaCancelar != null) {
-                Cancha canchaAsociada = sistema.getCancha(reservaParaCancelar.getIdReserva());
+                Cancha canchaAsociada = sistema.getCancha(reservaParaCancelar.getIdCancha());
                 if (canchaAsociada != null) {
                     socio.cancelarReserva(reservaParaCancelar);
                     canchaAsociada.cancelarReserva(reservaParaCancelar);
+                    ga.actualizarArchivoReservas(sistema);
                     System.out.println("¡Reserva ID " + idParaCancelar + " cancelada exitosamente!");
-                } else {
-                    System.out.println("Error: No se encontro la cancha asociada a esta reserva.");
                 }
             } else {
                 System.out.println("Error: No se encontro una reserva con ese ID en su cuenta.");
             }
         } catch (NumberFormatException e) {
-            System.out.println("Error: Debe ingresar un ID numerico válido.");
+            System.out.println("Error: Debe ingresar un ID numerico valido.");
         }
     }
 }

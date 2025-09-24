@@ -15,17 +15,9 @@ public class SistemaGestion {
         this.listaCanchas = new ArrayList<>() ;
         this.mapaSocios = new HashMap<>();
         
-        cargarDatosIniciales();
-    }
-    
-    private void cargarDatosIniciales() {
-        Cancha cancha1 = new Cancha(1, "Cancha 1 - Principal");
-        Cancha cancha2 = new Cancha(2, "Cancha 2 - Secundaria");
+        this.listaCanchas.add(new Cancha(1, "Cancha 1 - Principal"));
+        this.listaCanchas.add(new Cancha(2, "Cancha 2 - Secundaria"));
         
-        this.listaCanchas.add(cancha1);
-        this.listaCanchas.add(cancha2);
-        
-        System.out.println("Iniciando carga de datos desde archivos CSV...");
         GestionArchivos ga = new GestionArchivos();
         ga.cargarSocios(this);
         ga.cargarReservas(this);

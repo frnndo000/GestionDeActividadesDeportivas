@@ -165,7 +165,6 @@ public class GestionDeCanchas {
                     }
                     
                     try {
-                        int nuevoId = canchaElegida.getReservas().size() + 1;
                         Reserva nuevaReserva = new Reserva(proximoIdReserva++, canchaElegida.getId(), socioParaReserva.getRut(), fechaSeleccionada, bloqueSeleccionado);
                         canchaElegida.agregarReserva(nuevaReserva);
                         socioParaReserva.agregarReserva(nuevaReserva);
@@ -191,83 +190,6 @@ public class GestionDeCanchas {
             
         } catch (NumberFormatException e) {
             System.out.println("Error: Debe ingresar un numero valido para el dia.");
-        }
-    }
-    
-    private static LocalDate obtenerProximoDiaSemana(DayOfWeek diaSemana) {
-        LocalDate hoy = LocalDate.now();
-        int diasHastaProximo = diaSemana.getValue() - hoy.getDayOfWeek().getValue();
-        if (diasHastaProximo < 0) {
-            diasHastaProximo += 7;
-        }
-        return hoy.plusDays(diasHastaProximo);
-    }
-    
-    private static void mostrarHorariosDisponibles(SistemaGestion sistema, LocalDate fecha) {
-        System.out.println("\nHorarios disponibles para el " + fecha.getDayOfWeek() + " " + fecha + ":");
-        System.out.println("┌─────┬─────────────────┬───────────────┐");
-        System.out.println("│ No. │     Horario     │ Disponibilidad│");
-        System.out.println("├─────┼─────────────────┼───────────────┤");
-        
-        BloqueHorario[] bloques = BloqueHorario.values();
-        for (int i = 0; i < bloques.length; i++) {
-            BloqueHorario bloque = bloques[i];
-            
-            boolean disponible = false;
-            for (Cancha cancha : sistema.getListaCanchas()) {
-                if (cancha.estaDisponible(fecha, bloque)) {
-                    disponible = true;
-                    break;
-                }
-            }
-            
-            String dispTexto = disponible ? " DISPONIBLE" : " OCUPADO";
-            System.out.printf("│  %d  │ %-15s │ %-13s │\n", 
-                             i + 1, bloque.getDescripcion(), dispTexto);
-        }
-        System.out.println("└─────┴─────────────────┴───────────────┘");
-    }
-
-    public static void verOcupacionPorCancha(SistemaGestion sistema, BufferedReader leer) throws IOException {
-        System.out.println("\n--- Ver Ocupacion por Cancha ---");
-
-        System.out.println("Por favor, seleccione una cancha para ver sus reservas:");
-        for (Cancha c : sistema.getListaCanchas()) {
-            System.out.println(c.getId() + ". " + c.getNombre());
-        }
-
-        try {
-            System.out.print("Ingrese el numero de la cancha: ");
-            int idCancha = Integer.parseInt(leer.readLine());
-            Cancha canchaSeleccionada = sistema.getCancha(idCancha);
-
-            if (canchaSeleccionada == null) {
-                System.out.println("Error: Cancha no encontrada.");
-                return;
-            }
-
-            List<Reserva> reservasDeLaCancha = canchaSeleccionada.getReservas();
-
-            if (reservasDeLaCancha.isEmpty()) {
-                System.out.println("La cancha '" + canchaSeleccionada.getNombre() + "' no tiene reservas registradas.");
-                return;
-            }
-
-            System.out.println("\n--- Reservas para: " + canchaSeleccionada.getNombre() + " ---");
-            for (Reserva r : reservasDeLaCancha) {
-                Socio s = sistema.getSocioByRut(r.getRutSocio());
-                String nombreSocio = (s != null) ? s.getNombre() : "Socio no encontrado";
-
-                System.out.println("--------------------");
-                System.out.println("  ID Reserva: " + r.getIdReserva());
-                System.out.println("  Socio: " + nombreSocio + " (RUT: " + r.getRutSocio() + ")");
-                System.out.println("  Fecha: " + r.getFecha());
-                System.out.println("  Horario: " + r.getBloque().getDescripcion());
-            }
-            System.out.println("--------------------");
-
-        } catch (NumberFormatException e) {
-            System.out.println("Error: Debe ingresar un ID numerico valido.");
         }
     }
     
@@ -333,7 +255,36 @@ public class GestionDeCanchas {
         }
     }
     
-    public static void modificarReserva(SistemaGestion sistema, BufferedReader leer, GestionArchivos ga, Socio socio) throws IOException {
+    public static void cancelarReserva(SistemaGestion sistema, BufferedReader leer, GestionArchivos ga, Socio socio) throws IOException {
+        try {
+            System.out.print("\nIngrese el ID de la reserva que desea cancelar: ");
+            int idParaCancelar = Integer.parseInt(leer.readLine());
+            
+            Reserva reservaParaCancelar = null;
+            for (Reserva r : socio.getMisReservas()) {
+                if (r.getIdReserva() == idParaCancelar) {
+                    reservaParaCancelar = r;
+                    break;
+                }
+            }
+
+            if (reservaParaCancelar != null) {
+                Cancha canchaAsociada = sistema.getCancha(reservaParaCancelar.getIdCancha());
+                if (canchaAsociada != null) {
+                    socio.cancelarReserva(reservaParaCancelar);
+                    canchaAsociada.cancelarReserva(reservaParaCancelar);
+                    ga.actualizarArchivoReservas(sistema);
+                    System.out.println("¡Reserva ID " + idParaCancelar + " cancelada exitosamente!");
+                }
+            } else {
+                System.out.println("Error: No se encontro una reserva con ese ID en su cuenta.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Debe ingresar un ID numerico valido.");
+        }
+    }
+    
+        public static void modificarReserva(SistemaGestion sistema, BufferedReader leer, GestionArchivos ga, Socio socio) throws IOException {
         System.out.println("\n--- Modificar Horario de Reserva ---");
         try {
             System.out.print("Ingrese el ID de la reserva que desea modificar: ");
@@ -394,32 +345,80 @@ public class GestionDeCanchas {
         }
     }
     
-    public static void cancelarReserva(SistemaGestion sistema, BufferedReader leer, GestionArchivos ga, Socio socio) throws IOException {
-        try {
-            System.out.print("\nIngrese el ID de la reserva que desea cancelar: ");
-            int idParaCancelar = Integer.parseInt(leer.readLine());
+    private static void mostrarHorariosDisponibles(SistemaGestion sistema, LocalDate fecha) {
+        System.out.println("\nHorarios disponibles para el " + fecha.getDayOfWeek() + " " + fecha + ":");
+        System.out.println("┌─────┬─────────────────┬───────────────┐");
+        System.out.println("│ No. │     Horario     │ Disponibilidad│");
+        System.out.println("├─────┼─────────────────┼───────────────┤");
+        
+        BloqueHorario[] bloques = BloqueHorario.values();
+        for (int i = 0; i < bloques.length; i++) {
+            BloqueHorario bloque = bloques[i];
             
-            Reserva reservaParaCancelar = null;
-            for (Reserva r : socio.getMisReservas()) {
-                if (r.getIdReserva() == idParaCancelar) {
-                    reservaParaCancelar = r;
+            boolean disponible = false;
+            for (Cancha cancha : sistema.getListaCanchas()) {
+                if (cancha.estaDisponible(fecha, bloque)) {
+                    disponible = true;
                     break;
                 }
             }
+            
+            String dispTexto = disponible ? " DISPONIBLE" : " OCUPADO";
+            System.out.printf("│  %d  │ %-15s │ %-13s │\n", 
+                             i + 1, bloque.getDescripcion(), dispTexto);
+        }
+        System.out.println("└─────┴─────────────────┴───────────────┘");
+    }
+    
+    public static void verOcupacionPorCancha(SistemaGestion sistema, BufferedReader leer) throws IOException {
+        System.out.println("\n--- Ver Ocupacion por Cancha ---");
 
-            if (reservaParaCancelar != null) {
-                Cancha canchaAsociada = sistema.getCancha(reservaParaCancelar.getIdCancha());
-                if (canchaAsociada != null) {
-                    socio.cancelarReserva(reservaParaCancelar);
-                    canchaAsociada.cancelarReserva(reservaParaCancelar);
-                    ga.actualizarArchivoReservas(sistema);
-                    System.out.println("¡Reserva ID " + idParaCancelar + " cancelada exitosamente!");
-                }
-            } else {
-                System.out.println("Error: No se encontro una reserva con ese ID en su cuenta.");
+        System.out.println("Por favor, seleccione una cancha para ver sus reservas:");
+        for (Cancha c : sistema.getListaCanchas()) {
+            System.out.println(c.getId() + ". " + c.getNombre());
+        }
+
+        try {
+            System.out.print("Ingrese el numero de la cancha: ");
+            int idCancha = Integer.parseInt(leer.readLine());
+            Cancha canchaSeleccionada = sistema.getCancha(idCancha);
+
+            if (canchaSeleccionada == null) {
+                System.out.println("Error: Cancha no encontrada.");
+                return;
             }
+
+            List<Reserva> reservasDeLaCancha = canchaSeleccionada.getReservas();
+
+            if (reservasDeLaCancha.isEmpty()) {
+                System.out.println("La cancha '" + canchaSeleccionada.getNombre() + "' no tiene reservas registradas.");
+                return;
+            }
+
+            System.out.println("\n--- Reservas para: " + canchaSeleccionada.getNombre() + " ---");
+            for (Reserva r : reservasDeLaCancha) {
+                Socio s = sistema.getSocioByRut(r.getRutSocio());
+                String nombreSocio = (s != null) ? s.getNombre() : "Socio no encontrado";
+
+                System.out.println("--------------------");
+                System.out.println("  ID Reserva: " + r.getIdReserva());
+                System.out.println("  Socio: " + nombreSocio + " (RUT: " + r.getRutSocio() + ")");
+                System.out.println("  Fecha: " + r.getFecha());
+                System.out.println("  Horario: " + r.getBloque().getDescripcion());
+            }
+            System.out.println("--------------------");
+
         } catch (NumberFormatException e) {
             System.out.println("Error: Debe ingresar un ID numerico valido.");
         }
+    }
+    
+    private static LocalDate obtenerProximoDiaSemana(DayOfWeek diaSemana) {
+        LocalDate hoy = LocalDate.now();
+        int diasHastaProximo = diaSemana.getValue() - hoy.getDayOfWeek().getValue();
+        if (diasHastaProximo < 0) {
+            diasHastaProximo += 7;
+        }
+        return hoy.plusDays(diasHastaProximo);
     }
 }

@@ -1,41 +1,69 @@
 package gestiondecanchas.gui;
 
 import gestiondecanchas.SistemaGestion;
-import java.awt.Font;
-import java.awt.GridLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
+/**
+ * Menú principal de la aplicación.
+ * Muestra 3 botones para navegar a Socios, Canchas y Reservas.
+ */
 public class PanelMenuPrincipal extends JPanel {
+    private final VentanaPrincipal ventana;
+    private final SistemaGestion sistema;
+
     public PanelMenuPrincipal(VentanaPrincipal ventana, SistemaGestion sistema) {
-        setLayout(new GridLayout(5, 1, 15, 15));
-        setBorder(new EmptyBorder(30, 50, 30, 50));
+        this.ventana = ventana;
+        this.sistema = sistema;
 
-        JLabel lblTitulo = new JLabel("Cancha Maestra", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 32));
+        // Layout básico y padding
+        setLayout(new BorderLayout());
+        setBorder(new EmptyBorder(24, 24, 24, 24));
 
-        JButton btnReservar = new JButton("Realizar una nueva reserva");
-        JButton btnVerMisReservas = new JButton("Ver mis reservas");
-        JButton btnGestionar = new JButton("Gestionar una reserva (Modificar/Cancelar)");
-        JButton btnSalir = new JButton("Salir");
+        // Título
+        JLabel titulo = new JLabel("Cancha Maestra - Menú Principal", SwingConstants.CENTER);
+        titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 20f));
+        add(titulo, BorderLayout.NORTH);
 
-        add(lblTitulo);
-        add(btnReservar);
-        add(btnVerMisReservas);
-        add(btnGestionar);
-        add(btnSalir);
-        
-        btnReservar.addActionListener(e -> {
-            ventana.cambiarPanel(new PanelReserva(ventana, sistema));
-        });
-        
-        btnSalir.addActionListener(e -> {
-            // Aquí deberías llamar a los métodos de guardado si usaras un sistema "batch"
-            System.exit(0);
-        });
+        // Panel central con los botones
+        JPanel botones = new JPanel(new GridLayout(0, 1, 12, 12));
+        JButton btnSocios   = new JButton("Gestión de Socios");
+        JButton btnCanchas  = new JButton("Gestión de Canchas");
+        JButton btnReservas = new JButton("Gestión de Reservas");
+
+        // Tamaño preferido para que se vean parejos
+        Dimension d = new Dimension(260, 42);
+        btnSocios.setPreferredSize(d);
+        btnCanchas.setPreferredSize(d);
+        btnReservas.setPreferredSize(d);
+
+        botones.add(btnSocios);
+        botones.add(btnCanchas);
+        botones.add(btnReservas);
+
+        JPanel center = new JPanel(new GridBagLayout());
+        center.add(botones, new GridBagConstraints());
+        add(center, BorderLayout.CENTER);
+
+        // Pie (opcional)
+        JLabel pie = new JLabel("Seleccione una opción para continuar", SwingConstants.CENTER);
+        pie.setBorder(new EmptyBorder(12, 0, 0, 0));
+        add(pie, BorderLayout.SOUTH);
+
+        // Navegación: al hacer clic, cambiamos el panel en la ventana principal
+        btnSocios.addActionListener(e ->
+                ventana.cambiarPanel(new SociosPanel(ventana, sistema))
+        );
+
+        btnCanchas.addActionListener(e ->
+                ventana.cambiarPanel(new CanchasPanel(ventana, sistema))
+        );
+
+        btnReservas.addActionListener(e ->
+                ventana.cambiarPanel(new PanelReserva(ventana, sistema))
+        );
     }
 }
 

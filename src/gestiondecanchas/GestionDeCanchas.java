@@ -79,7 +79,7 @@ public class GestionDeCanchas {
             socioParaReserva = new Socio(rutSocio, nombre, telefono);
             sistema.agregarOActualizarSocio(socioParaReserva);
             ga.agregarSocioACSV(socioParaReserva);
-            System.out.println("¡Socio registrado y guardado con éxito!");
+            System.out.println("Socio registrado y guardado con exito!");
         }
 
         System.out.println("\n=== SELECCION DEL DIA ===");
@@ -223,7 +223,7 @@ public class GestionDeCanchas {
         
         imprimirReservasSocio(sistema, socio);
 
-        System.out.println("\n¿Que desea hacer?");
+        System.out.println("\nQue desea hacer?");
         System.out.println("1. Modificar el horario de una reserva");
         System.out.println("2. Cancelar una reserva");
         System.out.print("Seleccione una opcion: ");
@@ -259,7 +259,7 @@ public class GestionDeCanchas {
                     socio.cancelarReserva(reservaParaCancelar);
                     canchaAsociada.cancelarReserva(reservaParaCancelar);
                     ga.actualizarArchivoReservas(sistema);
-                    System.out.println("¡Reserva ID " + idParaCancelar + " cancelada exitosamente!");
+                    System.out.println("Reserva ID " + idParaCancelar + " cancelada exitosamente!");
                 }
             } else {
                 System.out.println("Error: No se encontro una reserva con ese ID en su cuenta.");
@@ -332,9 +332,9 @@ public class GestionDeCanchas {
     
     private static void mostrarHorariosDisponibles(SistemaGestion sistema, LocalDate fecha) {
         System.out.println("\nHorarios disponibles para el " + fecha.getDayOfWeek() + " " + fecha + ":");
-        System.out.println("┌─────┬─────────────────┬───────────────┐");
-        System.out.println("│ No. │     Horario     │ Disponibilidad│");
-        System.out.println("├─────┼─────────────────┼───────────────┤");
+        System.out.println("-----------------------------------------");
+        System.out.println("  No.       Horario       Disponibilidad ");
+        System.out.println("-----------------------------------------");
         
         BloqueHorario[] bloques = BloqueHorario.values();
         for (int i = 0; i < bloques.length; i++) {
@@ -349,10 +349,10 @@ public class GestionDeCanchas {
             }
             
             String dispTexto = disponible ? " DISPONIBLE" : " OCUPADO";
-            System.out.printf("│  %d  │ %-15s │ %-13s │\n", 
+            System.out.printf("   %d    %-15s   %-13s  \n", 
                              i + 1, bloque.getDescripcion(), dispTexto);
         }
-        System.out.println("└─────┴─────────────────┴───────────────┘");
+        System.out.println("-----------------------------------------");
     }
     
     public static void verOcupacionPorCancha(SistemaGestion sistema, BufferedReader leer) throws IOException {

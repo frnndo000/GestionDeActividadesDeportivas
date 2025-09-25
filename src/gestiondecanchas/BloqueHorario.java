@@ -16,6 +16,9 @@ public enum BloqueHorario {
         this.descripcion = descripcion ;
     }
     
+    @Override
+    public String toString() { return getDescripcion(); } 
+    
     public String getDescripcion() {
         return descripcion ;
     }

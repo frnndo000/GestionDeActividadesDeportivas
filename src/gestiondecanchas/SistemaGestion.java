@@ -42,6 +42,22 @@ public class SistemaGestion {
         return proximoIdReserva++;
     }
     
+    public void eliminarSocio(String rut) { mapaSocios.remove(rut); }
+    public int generarProximoIdReserva() {
+        int max = 0;
+        for (Cancha c : listaCanchas) {
+            for (Reserva r : c.getReservas()) {
+                if (r.getIdReserva() > max) max = r.getIdReserva();
+            }
+        }
+        return max + 1;
+    }
+    public java.util.List<Reserva> getTodasLasReservas() {
+        java.util.List<Reserva> out = new java.util.ArrayList<>();
+        for (Cancha c : listaCanchas) out.addAll(c.getReservas());
+        return out;
+    }
+    
     // ... (El resto de la clase se mantiene igual)
     public Collection<Socio> getSocios() { return mapaSocios.values(); }
     public void agregarOActualizarSocio(Socio socio) { this.mapaSocios.put(socio.getRut(), socio); }

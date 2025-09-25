@@ -34,6 +34,9 @@ public class Socio{
         this.misReservas.remove(reserva);
     }
     
+    @Override
+    public String toString() { return rut + " - " + nombre; } // Socio
+    
     public String getRut() { return rut; }
     public void setRut(String rut) { this.rut = rut; }
     public String getNombre() { return nombre; }

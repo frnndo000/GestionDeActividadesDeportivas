@@ -15,6 +15,9 @@ public class Cancha {
         this.reservas = new ArrayList<>() ;
     }
     
+    @Override
+    public String toString() { return id + " - " + nombre; }
+    
     public int getId() { return id ; }
     public void setId(int nuevoId) { this.id = nuevoId ; }
     public String getNombre() { return nombre ; }

@@ -1,15 +1,10 @@
 package gestiondecanchas.gui;
 
 import gestiondecanchas.SistemaGestion;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-/**
- * Menú principal de la aplicación.
- * Muestra 3 botones para navegar a Socios, Canchas y Reservas.
- */
 public class PanelMenuPrincipal extends JPanel {
     private final VentanaPrincipal ventana;
     private final SistemaGestion sistema;
@@ -18,52 +13,31 @@ public class PanelMenuPrincipal extends JPanel {
         this.ventana = ventana;
         this.sistema = sistema;
 
-        // Layout básico y padding
-        setLayout(new BorderLayout());
+        setLayout(new GridBagLayout());
         setBorder(new EmptyBorder(24, 24, 24, 24));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
 
-        // Título
-        JLabel titulo = new JLabel("Cancha Maestra - Menú Principal", SwingConstants.CENTER);
-        titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 20f));
-        add(titulo, BorderLayout.NORTH);
+        JLabel titulo = new JLabel("Cancha Maestra - Sistema de Reservas", SwingConstants.CENTER);
+        titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 22f));
 
-        // Panel central con los botones
-        JPanel botones = new JPanel(new GridLayout(0, 1, 12, 12));
-        JButton btnSocios   = new JButton("Gestión de Socios");
-        JButton btnCanchas  = new JButton("Gestión de Canchas");
-        JButton btnReservas = new JButton("Gestión de Reservas");
+        JButton btnSocios    = new JButton("Socios");
+        JButton btnCanchas   = new JButton("Canchas");
+        JButton btnReservasN = new JButton("Nueva Reserva");
+        JButton btnReservasA = new JButton("Administrar Reservas");
 
-        // Tamaño preferido para que se vean parejos
-        Dimension d = new Dimension(260, 42);
-        btnSocios.setPreferredSize(d);
-        btnCanchas.setPreferredSize(d);
-        btnReservas.setPreferredSize(d);
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2; gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(titulo, gbc);
 
-        botones.add(btnSocios);
-        botones.add(btnCanchas);
-        botones.add(btnReservas);
+        gbc.gridwidth = 1; gbc.fill = GridBagConstraints.NONE;
+        gbc.gridx = 0; gbc.gridy = 1; add(btnSocios, gbc);
+        gbc.gridx = 1; gbc.gridy = 1; add(btnCanchas, gbc);
+        gbc.gridx = 0; gbc.gridy = 2; add(btnReservasN, gbc);
+        gbc.gridx = 1; gbc.gridy = 2; add(btnReservasA, gbc);
 
-        JPanel center = new JPanel(new GridBagLayout());
-        center.add(botones, new GridBagConstraints());
-        add(center, BorderLayout.CENTER);
-
-        // Pie (opcional)
-        JLabel pie = new JLabel("Seleccione una opción para continuar", SwingConstants.CENTER);
-        pie.setBorder(new EmptyBorder(12, 0, 0, 0));
-        add(pie, BorderLayout.SOUTH);
-
-        // Navegación: al hacer clic, cambiamos el panel en la ventana principal
-        btnSocios.addActionListener(e ->
-                ventana.cambiarPanel(new SociosPanel(ventana, sistema))
-        );
-
-        btnCanchas.addActionListener(e ->
-                ventana.cambiarPanel(new CanchasPanel(ventana, sistema))
-        );
-
-        btnReservas.addActionListener(e ->
-                ventana.cambiarPanel(new PanelReserva(ventana, sistema))
-        );
+        btnSocios.addActionListener(e -> ventana.cambiarPanel(new SociosPanel(ventana, sistema)));
+        btnCanchas.addActionListener(e -> ventana.cambiarPanel(new CanchasPanel(ventana, sistema)));
+        btnReservasN.addActionListener(e -> ventana.cambiarPanel(new PanelReserva(ventana, sistema)));
+        btnReservasA.addActionListener(e -> ventana.cambiarPanel(new PanelReservas(ventana, sistema)));
     }
 }
-

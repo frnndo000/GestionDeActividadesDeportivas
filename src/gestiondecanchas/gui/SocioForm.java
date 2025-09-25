@@ -1,12 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author et
- */
 package gestiondecanchas.gui;
 
 import gestiondecanchas.Socio;
@@ -14,29 +5,40 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SocioForm extends JDialog {
-    private final JTextField tfRut = new JTextField(12);
-    private final JTextField tfNom = new JTextField(20);
-    private final JTextField tfTel = new JTextField(12);
     private boolean ok = false;
+    private final JTextField tfRut = new JTextField(12);
+    private final JTextField tfNom = new JTextField(18);
+    private final JTextField tfTel = new JTextField(12);
 
     public SocioForm(Window owner, Socio s) {
-        super(owner, s==null?"Nuevo socio":"Editar socio", ModalityType.APPLICATION_MODAL);
+        super(owner, "Socio", ModalityType.APPLICATION_MODAL);
+        setSize(380, 220);
+        setLocationRelativeTo(owner);
+        setLayout(new GridBagLayout());
 
-        JPanel p = new JPanel(new GridLayout(0,2,8,8));
-        p.add(new JLabel("RUT:")); p.add(tfRut);
-        p.add(new JLabel("Nombre:")); p.add(tfNom);
-        p.add(new JLabel("Teléfono:")); p.add(tfTel);
+        GridBagConstraints g = new GridBagConstraints();
+        g.insets = new Insets(6, 6, 6, 6);
+        g.fill = GridBagConstraints.HORIZONTAL;
+
+        g.gridx = 0; g.gridy = 0; add(new JLabel("RUT:"), g);
+        g.gridx = 1; g.gridy = 0; add(tfRut, g);
+
+        g.gridx = 0; g.gridy = 1; add(new JLabel("Nombre:"), g);
+        g.gridx = 1; g.gridy = 1; add(tfNom, g);
+
+        g.gridx = 0; g.gridy = 2; add(new JLabel("Teléfono:"), g);
+        g.gridx = 1; g.gridy = 2; add(tfTel, g);
 
         JButton btnOk = new JButton("Guardar");
         JButton btnCancel = new JButton("Cancelar");
-        btnOk.addActionListener(e -> { ok = true; dispose(); });
-        btnCancel.addActionListener(e -> dispose());
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttons.add(btnCancel);
+        buttons.add(btnOk);
 
-        JPanel south = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        south.add(btnCancel); south.add(btnOk);
+        g.gridx = 0; g.gridy = 3; g.gridwidth = 2; add(buttons, g);
 
-        add(p, BorderLayout.CENTER); add(south, BorderLayout.SOUTH);
-        pack(); setLocationRelativeTo(owner);
+        btnOk.addActionListener(e -> { ok = true; setVisible(false); });
+        btnCancel.addActionListener(e -> { ok = false; setVisible(false); });
 
         if (s != null) {
             tfRut.setText(s.getRut());

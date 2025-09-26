@@ -13,16 +13,12 @@ public class SistemaGestion {
         this.listaCanchas = new ArrayList<>();
         this.mapaSocios = new HashMap<>();
 
-        // Cargar canchas base
-        this.listaCanchas.add(new Cancha(1, "Cancha 1 - Principal"));
-        this.listaCanchas.add(new Cancha(2, "Cancha 2 - Secundaria"));
-
-        // Cargar datos desde archivos
+        // --- LÓGICA DE CARGA ACTUALIZADA ---
         GestionArchivos ga = new GestionArchivos();
-        ga.cargarSocios(this);
-        ga.cargarReservas(this);
+        ga.cargarCanchas(this); // 1. Carga las canchas primero
+        ga.cargarSocios(this);  // 2. Carga los socios
+        ga.cargarReservas(this);// 3. Carga las reservas y las asocia a las canchas y socios ya cargados
 
-        // Ajustar el contador de IDs de reserva
         sincronizarProximoId();
     }
 
@@ -39,6 +35,27 @@ public class SistemaGestion {
             }
         }
         this.proximoIdReserva = maxId + 1;
+    }
+    
+        // --- NUEVOS MÉTODOS PARA GESTIONAR CANCHAS ---
+    public void agregarCancha(Cancha c) {
+        if (c != null && getCancha(c.getId()) == null) {
+            this.listaCanchas.add(c);
+        }
+    }
+
+    public boolean eliminarCancha(int id) {
+        // Advertencia: Esto no elimina las reservas asociadas de los socios.
+        // En un sistema real, se necesitaría una lógica más compleja aquí.
+        return this.listaCanchas.removeIf(c -> c.getId() == id);
+    }
+    
+    public int getProximoIdCancha() {
+        // Busca el ID más alto existente y le suma 1
+        return listaCanchas.stream()
+                .mapToInt(Cancha::getId)
+                .max()
+                .orElse(0) + 1;
     }
 
     /** Busca una reserva específica en una cancha. */
@@ -57,6 +74,7 @@ public class SistemaGestion {
     public int getProximoIdReserva() {
         return proximoIdReserva++;
     }
+    
 
     // ======= Gestión de socios =======
 

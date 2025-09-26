@@ -6,20 +6,19 @@ import java.util.List;
 
 public class Cancha {
     private final int id;
-    private final String nombre;
-    private final List<Reserva> reservas = new ArrayList<>();
+    private String nombre;
+    private final List<Reserva> reservas;
 
     public Cancha(int id, String nombre) {
         this.id = id;
         this.nombre = nombre;
+        this.reservas = new ArrayList<>();
     }
-
-    // ======= Getters =======
+    
     public int getId() { return id; }
     public String getNombre() { return nombre; }
-    /** Lista viva de reservas de esta cancha. */
-    public List<Reserva> getReservas() { return reservas; }
-
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public List<Reserva> getReservas() { return new ArrayList<>(this.reservas); }
     // ======= Operaciones =======
     /** Agrega una reserva a esta cancha. (No valida solapamientos) */
     public void agregarReserva(Reserva r) {

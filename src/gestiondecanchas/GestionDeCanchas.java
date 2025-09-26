@@ -400,8 +400,6 @@ public class GestionDeCanchas {
         }
     }
     
-
-    
     private static LocalDate obtenerProximoDiaSemana(DayOfWeek diaSemana) {
         LocalDate hoy = LocalDate.now();
         int diasHastaProximo = diaSemana.getValue() - hoy.getDayOfWeek().getValue();

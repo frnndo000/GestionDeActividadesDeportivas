@@ -16,17 +16,34 @@ import java.util.List;
  */
 public class GestionArchivos {
 
-    private static final Path DIR_DATA      = Paths.get("data");
-    private static final Path FILE_SOCIOS   = DIR_DATA.resolve("socios.csv");
+    private static final Path DIR_DATA = Paths.get("data");
+    private static final Path FILE_SOCIOS = DIR_DATA.resolve("socios.csv");
     private static final Path FILE_RESERVAS = DIR_DATA.resolve("reservas.csv");
+    private static final Path FILE_CANCHAS = DIR_DATA.resolve("canchas.csv"); // <-- NUEVO ARCHIVO
 
     public GestionArchivos() {
         try {
             if (!Files.exists(DIR_DATA)) Files.createDirectories(DIR_DATA);
-            if (!Files.exists(FILE_SOCIOS))   Files.createFile(FILE_SOCIOS);
+            if (!Files.exists(FILE_SOCIOS)) Files.createFile(FILE_SOCIOS);
             if (!Files.exists(FILE_RESERVAS)) Files.createFile(FILE_RESERVAS);
+            if (!Files.exists(FILE_CANCHAS)) Files.createFile(FILE_CANCHAS); // <-- NUEVO ARCHIVO
         } catch (IOException e) {
             System.err.println("No se pudo preparar la carpeta/archivos de datos: " + e.getMessage());
+        }
+    }
+    
+        public void cargarCanchas(SistemaGestion sistema) {
+        try {
+            List<String> lines = Files.readAllLines(FILE_CANCHAS, StandardCharsets.UTF_8);
+            for (String line : lines) {
+                if (line.isBlank()) continue;
+                String[] p = line.split(",", -1);
+                if (p.length < 2) continue; // id,nombre
+                Cancha c = new Cancha(Integer.parseInt(p[0].trim()), p[1].trim());
+                sistema.agregarCancha(c);
+            }
+        } catch (IOException e) {
+            System.err.println("Error leyendo canchas.csv: " + e.getMessage());
         }
     }
 
@@ -101,6 +118,18 @@ public class GestionArchivos {
             bw.newLine();
         } catch (IOException e) {
             System.err.println("No se pudo escribir reservas.csv: " + e.getMessage());
+        }
+    }
+    
+    public void guardarCanchas(SistemaGestion sistema) {
+        try (BufferedWriter bw = Files.newBufferedWriter(FILE_CANCHAS, StandardCharsets.UTF_8)) {
+            for (Cancha c : sistema.getListaCanchas()) {
+                String row = String.join(",", String.valueOf(c.getId()), c.getNombre());
+                bw.write(row);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("No se pudo guardar canchas.csv: " + e.getMessage());
         }
     }
 

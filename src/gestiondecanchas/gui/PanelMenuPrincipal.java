@@ -18,7 +18,7 @@ public class PanelMenuPrincipal extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        JLabel titulo = new JLabel("Cancha Maestra - Sistema de Reservas", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Sistema de Reservas", SwingConstants.CENTER);
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 22f));
 
         JButton btnSocios    = new JButton("Socios");

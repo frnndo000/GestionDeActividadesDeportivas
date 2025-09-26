@@ -13,7 +13,7 @@ public class VentanaPrincipal extends JFrame {
 
     public VentanaPrincipal() {
         this.sistema = new SistemaGestion();
-        setTitle("Cancha Maestra - Sistema de Reservas");
+        setTitle("Sistema de Reservas");
         setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

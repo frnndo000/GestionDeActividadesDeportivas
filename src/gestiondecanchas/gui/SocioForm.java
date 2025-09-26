@@ -10,10 +10,33 @@ public class SocioForm extends JDialog {
     private final JTextField tfNom = new JTextField(18);
     private final JTextField tfTel = new JTextField(12);
 
+    /**
+     * Constructor para editar un socio existente o crear uno nuevo sin datos.
+     */
     public SocioForm(Window owner, Socio s) {
         super(owner, "Socio", ModalityType.APPLICATION_MODAL);
+        setupUI();
+
+        if (s != null) { // Modo Edición
+            tfRut.setText(s.getRut());
+            tfNom.setText(s.getNombre());
+            tfTel.setText(s.getTelefono());
+            tfRut.setEnabled(false); // El RUT no se puede editar
+        }
+    }
+    
+    /**
+     * NUEVO CONSTRUCTOR: Para crear un socio nuevo pre-rellenando el RUT.
+     */
+    public SocioForm(Window owner, String rutInicial) {
+        super(owner, "Nuevo Socio", ModalityType.APPLICATION_MODAL);
+        setupUI();
+        tfRut.setText(rutInicial); // Rellenamos el RUT que el usuario ya ingresó
+    }
+
+    private void setupUI() {
         setSize(380, 220);
-        setLocationRelativeTo(owner);
+        setLocationRelativeTo(getOwner());
         setLayout(new GridBagLayout());
 
         GridBagConstraints g = new GridBagConstraints();
@@ -22,10 +45,8 @@ public class SocioForm extends JDialog {
 
         g.gridx = 0; g.gridy = 0; add(new JLabel("RUT:"), g);
         g.gridx = 1; g.gridy = 0; add(tfRut, g);
-
         g.gridx = 0; g.gridy = 1; add(new JLabel("Nombre:"), g);
         g.gridx = 1; g.gridy = 1; add(tfNom, g);
-
         g.gridx = 0; g.gridy = 2; add(new JLabel("Teléfono:"), g);
         g.gridx = 1; g.gridy = 2; add(tfTel, g);
 
@@ -39,17 +60,12 @@ public class SocioForm extends JDialog {
 
         btnOk.addActionListener(e -> { ok = true; setVisible(false); });
         btnCancel.addActionListener(e -> { ok = false; setVisible(false); });
-
-        if (s != null) {
-            tfRut.setText(s.getRut());
-            tfNom.setText(s.getNombre());
-            tfTel.setText(s.getTelefono());
-            tfRut.setEnabled(false); // RUT como PK
-        }
     }
 
     public boolean isOk() { return ok; }
+
     public Socio getSocio() {
+        if (!ok) return null;
         return new Socio(tfRut.getText().trim(), tfNom.getText().trim(), tfTel.getText().trim());
     }
 }

@@ -1,5 +1,7 @@
 package gestiondecanchas;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.DayOfWeek;
 import java.io.BufferedReader;
@@ -397,6 +399,8 @@ public class GestionDeCanchas {
             System.out.println("Error: Debe ingresar un ID numerico valido.");
         }
     }
+    
+
     
     private static LocalDate obtenerProximoDiaSemana(DayOfWeek diaSemana) {
         LocalDate hoy = LocalDate.now();

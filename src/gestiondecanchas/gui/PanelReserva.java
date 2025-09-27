@@ -43,6 +43,19 @@ public class PanelReserva extends JPanel {
         JLabel lblBloque = new JLabel("Horario Disponible:");
         cmbBloque = new JComboBox<>();
 
+        // 🔧 CONFIGURAR EL RENDERER PERSONALIZADO PARA MOSTRAR HORARIOS FORMATEADOS
+        cmbBloque.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public java.awt.Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof BloqueHorario) {
+                    BloqueHorario bloque = (BloqueHorario) value;
+                    setText(bloque.getDescripcion()); // Usar la descripción formateada
+                }
+                return this;
+            }
+        });
+
         JButton btnConfirmar = new JButton("Confirmar Reserva");
         JButton btnVolver = new JButton("Volver al Menú");
 

@@ -3,6 +3,7 @@ package gestiondecanchas.gui;
 import gestiondecanchas.SistemaGestion;
 import gestiondecanchas.Cancha;
 import gestiondecanchas.Reserva;
+import gestiondecanchas.Socio;
 import gestiondecanchas.BloqueHorario;
 import gestiondecanchas.GestionArchivos;
 
@@ -18,10 +19,13 @@ public class PanelReservas extends JPanel {
     private final SistemaGestion sistema;
 
     private final JComboBox<Cancha> cboCancha = new JComboBox<>();
+    
+    // -> CAMBIO 1: Reordenar encabezados y añadir la columna "Nombre Socio"
     private final DefaultTableModel model = new DefaultTableModel(
-            new String[]{"ID", "Fecha (YYYY-MM-DD)", "Bloque"}, 0) {
+            new String[]{"ID", "RUT Socio", "Nombre Socio", "Teléfono", "Fecha", "Hora"}, 0) {
         @Override public boolean isCellEditable(int r, int c) { return false; }
     };
+    
     private final JTable tabla = new JTable(model);
 
     public PanelReservas(VentanaPrincipal frame, SistemaGestion sistema) {
@@ -49,7 +53,7 @@ public class PanelReservas extends JPanel {
         add(top, BorderLayout.NORTH);
         add(new JScrollPane(tabla), BorderLayout.CENTER);
 
-        // Eventos
+        // --- Eventos (sin cambios en los listeners) ---
         btnRefrescar.addActionListener(e -> cargarTabla());
         cboCancha.addActionListener(e -> cargarTabla());
 
@@ -110,7 +114,7 @@ public class PanelReservas extends JPanel {
             } else {
                 new GestionArchivos().guardarReservas(sistema);
             }
-            cargarTabla(); // Esta línea es crucial - refresca la tabla
+            cargarTabla();
         });
 
         btnVolver.addActionListener(e -> frame.cambiarPanel(new PanelMenuPrincipal(frame, sistema)));
@@ -143,7 +147,32 @@ public class PanelReservas extends JPanel {
         model.setRowCount(0);
         int canchaId = getCanchaSeleccionadaId();
         if (canchaId == -1) return;
+        
         List<Reserva> rs = sistema.listarReservasOrdenadas(canchaId);
-        for (Reserva r : rs) model.addRow(new Object[]{ r.getIdReserva(), r.getFecha(), r.getBloque() });
+
+        for (Reserva r : rs) {
+            Socio socio = sistema.getSocioByRut(r.getRutSocio());
+            
+            // Valores por defecto en caso de que el socio no se encuentre
+            String rutSocio = "N/A";
+            String nombreSocio = "Socio no encontrado";
+            String telefonoSocio = "N/A";
+
+            if (socio != null) {
+                rutSocio = socio.getRut();
+                nombreSocio = socio.getNombre(); // Obtenemos el nombre
+                telefonoSocio = socio.getTelefono();
+            }
+            
+            // -> CAMBIO 2: Añadir la fila con el nuevo orden de datos
+            model.addRow(new Object[]{
+                r.getIdReserva(),
+                rutSocio,
+                nombreSocio,
+                telefonoSocio,
+                r.getFecha(),
+                r.getBloque().getDescripcion()
+            });
+        }
     }
 }

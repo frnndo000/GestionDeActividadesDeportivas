@@ -38,6 +38,10 @@ public class Socio {
     public void eliminarReserva(Reserva r) {
         reservas.remove(r);
     }
+    
+    public boolean eliminarReserva(int idReserva) {
+        return this.reservas.removeIf(reserva -> reserva.getIdReserva() == idReserva);
+    }
 
     // ======= Utilidad =======
     @Override

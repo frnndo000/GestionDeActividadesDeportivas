@@ -93,6 +93,18 @@ public class SistemaGestion {
         }
         return null;
     }
+    
+    public Cancha getCancha(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return null;
+        }
+        for (Cancha cancha : listaCanchas) {
+            if (cancha.getNombre().equalsIgnoreCase(nombre.trim())) {
+                return cancha;
+            }
+        }
+        return null;
+    }
 
     public List<Reserva> getTodasLasReservas() {
         List<Reserva> out = new ArrayList<>();

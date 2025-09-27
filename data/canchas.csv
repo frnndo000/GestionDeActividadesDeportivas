@@ -1,6 +1,30 @@
-1,fut1,FUTBOL_PASTO
-2,fut2,FUTBOL_PASTO
-3,fut3,FUTBOL_PASTO
-4,mult1,MULTICANCHA
-5,mult2,MULTICANCHA
-6,dssd,MULTICANCHA
+1,Estadio El Morro,FUTBOL_PASTO
+2,Complejo Centenario,FUTBOL_PASTO
+3,Multicancha Central,MULTICANCHA
+4,Cancha de Pasto Norte,FUTBOL_PASTO
+5,Multicancha Poniente,MULTICANCHA
+6,Cancha de Fútbol 3,FUTBOL_PASTO
+7,Multicancha Oriente,MULTICANCHA
+8,Cancha de Fútbol 4,FUTBOL_PASTO
+9,Multicancha Sur,MULTICANCHA
+10,Estadio Municipal,FUTBOL_PASTO
+11,Gimnasio Techado 1,MULTICANCHA
+12,Cancha Parque O'Higgins,FUTBOL_PASTO
+13,Gimnasio Techado 2,MULTICANCHA
+14,Cancha Parque Forestal,FUTBOL_PASTO
+15,Multicancha Plaza,MULTICANCHA
+16,Cancha de Fútbol 5,FUTBOL_PASTO
+17,Multicancha 6,MULTICANCHA
+18,Cancha de Fútbol 7,FUTBOL_PASTO
+19,Multicancha 8,MULTICANCHA
+20,Cancha de Fútbol 9,FUTBOL_PASTO
+21,Multicancha 10,MULTICANCHA
+22,Cancha de Fútbol 11,FUTBOL_PASTO
+23,Multicancha 12,MULTICANCHA
+24,Cancha de Fútbol 13,FUTBOL_PASTO
+25,Multicancha 14,MULTICANCHA
+26,Cancha de Fútbol 15,FUTBOL_PASTO
+27,Multicancha 16,MULTICANCHA
+28,Cancha de Fútbol 17,FUTBOL_PASTO
+29,Multicancha 18,MULTICANCHA
+30,Cancha de Fútbol 19,FUTBOL_PASTO

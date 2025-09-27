@@ -1,0 +1,177 @@
+======================================================
+        REPORTE DE RESERVAS DEL SISTEMA
+    Generado el: 2025-09-27T20:40:22.217280300
+======================================================
+
+------------------------------------------------------
+          LISTADO DETALLADO DE RESERVAS
+------------------------------------------------------
+
+--- Cancha: Estadio El Morro (Cancha de Fútbol) ---
+   - ID: 1    | Fecha: 2025-10-01 | Horario: 10:00 - 11:00   | Socio: Carlos González (15.111.222-3)
+   - ID: 5    | Fecha: 2025-10-02 | Horario: 15:00 - 16:00   | Socio: Diego Soto (15.111.226-6)
+   - ID: 9    | Fecha: 2025-10-04 | Horario: 19:00 - 20:00   | Socio: Carlos González (15.111.222-3)
+   - ID: 11   | Fecha: 2025-10-05 | Horario: 08:00 - 09:00   | Socio: Carlos González (15.111.222-3)
+   - ID: 26   | Fecha: 2025-10-10 | Horario: 09:00 - 10:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+   - ID: 32   | Fecha: 2025-10-12 | Horario: 11:00 - 12:00   | Socio: Benjamín Rodríguez (15.111.232-0)
+   - ID: 33   | Fecha: 2025-10-13 | Horario: 12:00 - 13:00   | Socio: Antonia López (15.111.233-9)
+   - ID: 39   | Fecha: 2025-10-16 | Horario: 19:00 - 20:00   | Socio: Julieta Espinoza (15.111.239-8)
+   - ID: 42   | Fecha: 2025-10-17 | Horario: 09:00 - 10:00   | Socio: Isidora Reyes (15.111.243-6)
+   - ID: 47   | Fecha: 2025-10-20 | Horario: 14:00 - 15:00   | Socio: Santiago Herrera (15.111.248-7)
+
+--- Cancha: Complejo Centenario (Cancha de Fútbol) ---
+   - ID: 6    | Fecha: 2025-10-03 | Horario: 16:00 - 17:00   | Socio: Carlos González (15.111.222-3)
+   - ID: 12   | Fecha: 2025-10-05 | Horario: 09:00 - 10:00   | Socio: Carlos González (15.111.222-3)
+   - ID: 27   | Fecha: 2025-10-10 | Horario: 10:00 - 11:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+   - ID: 37   | Fecha: 2025-10-15 | Horario: 17:00 - 18:00   | Socio: Emilia Araya (15.111.237-1)
+   - ID: 48   | Fecha: 2025-10-20 | Horario: 15:00 - 16:00   | Socio: Daniela Tapia (15.111.249-5)
+
+--- Cancha: Multicancha Central (Multicancha) ---
+   - ID: 2    | Fecha: 2025-10-01 | Horario: 11:00 - 12:00   | Socio: Sofía Rojas (15.111.223-1)
+   - ID: 7    | Fecha: 2025-10-03 | Horario: 17:00 - 18:00   | Socio: Camila Contreras (15.111.227-4)
+   - ID: 13   | Fecha: 2025-10-05 | Horario: 10:00 - 11:00   | Socio: Carlos González (15.111.222-3)
+   - ID: 28   | Fecha: 2025-10-10 | Horario: 11:00 - 12:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+   - ID: 31   | Fecha: 2025-10-12 | Horario: 10:00 - 11:00   | Socio: Florencia Morales (15.111.231-2)
+   - ID: 34   | Fecha: 2025-10-13 | Horario: 14:00 - 15:00   | Socio: Vicente Fuentes (15.111.234-7)
+   - ID: 38   | Fecha: 2025-10-15 | Horario: 18:00 - 19:00   | Socio: Tomás Flores (15.111.238-K)
+   - ID: 41   | Fecha: 2025-10-17 | Horario: 08:00 - 09:00   | Socio: Lucas Ramírez (15.111.242-8)
+   - ID: 46   | Fecha: 2025-10-19 | Horario: 13:00 - 14:00   | Socio: Laura Núñez (15.111.247-9)
+   - ID: 49   | Fecha: 2025-10-21 | Horario: 16:00 - 17:00   | Socio: Matías Maldonado (15.111.250-9)
+
+--- Cancha: Cancha de Pasto Norte (Cancha de Fútbol) ---
+   - ID: 14   | Fecha: 2025-10-06 | Horario: 11:00 - 12:00   | Socio: Carlos González (15.111.222-3)
+   - ID: 29   | Fecha: 2025-10-11 | Horario: 12:00 - 13:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+
+--- Cancha: Multicancha Poniente (Multicancha) ---
+   - ID: 3    | Fecha: 2025-10-01 | Horario: 12:00 - 13:00   | Socio: Javier Díaz (15.111.224-K)
+   - ID: 10   | Fecha: 2025-10-04 | Horario: 20:00 - 21:00   | Socio: Isabella Martínez (15.111.229-0)
+   - ID: 15   | Fecha: 2025-10-06 | Horario: 12:00 - 13:00   | Socio: Carlos González (15.111.222-3)
+   - ID: 30   | Fecha: 2025-10-11 | Horario: 13:00 - 14:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+   - ID: 35   | Fecha: 2025-10-14 | Horario: 15:00 - 16:00   | Socio: Martina Hernández (15.111.235-5)
+   - ID: 50   | Fecha: 2025-10-21 | Horario: 17:00 - 18:00   | Socio: Catalina Paredes (15.111.251-7)
+
+--- Cancha: Cancha de Fútbol 3 (Cancha de Fútbol) ---
+   - ID: 16   | Fecha: 2025-10-06 | Horario: 13:00 - 14:00   | Socio: Carlos González (15.111.222-3)
+
+--- Cancha: Multicancha Oriente (Multicancha) ---
+   - ID: 17   | Fecha: 2025-10-07 | Horario: 14:00 - 15:00   | Socio: Carlos González (15.111.222-3)
+
+--- Cancha: Cancha de Fútbol 4 (Cancha de Fútbol) ---
+   - ID: 18   | Fecha: 2025-10-07 | Horario: 15:00 - 16:00   | Socio: Carlos González (15.111.222-3)
+
+--- Cancha: Multicancha Sur (Multicancha) ---
+   - ID: 19   | Fecha: 2025-10-07 | Horario: 16:00 - 17:00   | Socio: Carlos González (15.111.222-3)
+
+--- Cancha: Estadio Municipal (Cancha de Fútbol) ---
+   - ID: 4    | Fecha: 2025-10-02 | Horario: 14:00 - 15:00   | Socio: Valentina Pérez (15.111.225-8)
+   - ID: 20   | Fecha: 2025-10-08 | Horario: 17:00 - 18:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+   - ID: 43   | Fecha: 2025-10-18 | Horario: 10:00 - 11:00   | Socio: Maximiliano Gutiérrez (15.111.244-4)
+
+--- Cancha: Gimnasio Techado 1 (Multicancha) ---
+   - ID: 21   | Fecha: 2025-10-08 | Horario: 18:00 - 19:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+
+--- Cancha: Cancha Parque O'Higgins (Cancha de Fútbol) ---
+   - ID: 22   | Fecha: 2025-10-08 | Horario: 19:00 - 20:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+   - ID: 44   | Fecha: 2025-10-18 | Horario: 11:00 - 12:00   | Socio: Amanda Castro (15.111.245-2)
+
+--- Cancha: Gimnasio Techado 2 (Multicancha) ---
+   - ID: 23   | Fecha: 2025-10-09 | Horario: 20:00 - 21:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+
+--- Cancha: Cancha Parque Forestal (Cancha de Fútbol) ---
+   - ID: 24   | Fecha: 2025-10-09 | Horario: 21:00 - 22:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+
+--- Cancha: Multicancha Plaza (Multicancha) ---
+   - ID: 8    | Fecha: 2025-10-04 | Horario: 18:00 - 19:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+   - ID: 25   | Fecha: 2025-10-09 | Horario: 08:00 - 09:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+   - ID: 36   | Fecha: 2025-10-14 | Horario: 16:00 - 17:00   | Socio: Agustín Torres (15.111.236-3)
+   - ID: 40   | Fecha: 2025-10-16 | Horario: 20:00 - 21:00   | Socio: Renata Castillo (15.111.241-K)
+   - ID: 45   | Fecha: 2025-10-19 | Horario: 12:00 - 13:00   | Socio: Gaspar Vargas (15.111.246-0)
+
+--- Cancha: Cancha de Fútbol 5 (Cancha de Fútbol) ---
+   (Sin reservas)
+
+--- Cancha: Multicancha 6 (Multicancha) ---
+   (Sin reservas)
+
+--- Cancha: Cancha de Fútbol 7 (Cancha de Fútbol) ---
+   (Sin reservas)
+
+--- Cancha: Multicancha 8 (Multicancha) ---
+   (Sin reservas)
+
+--- Cancha: Cancha de Fútbol 9 (Cancha de Fútbol) ---
+   (Sin reservas)
+
+--- Cancha: Multicancha 10 (Multicancha) ---
+   (Sin reservas)
+
+--- Cancha: Cancha de Fútbol 11 (Cancha de Fútbol) ---
+   (Sin reservas)
+
+--- Cancha: Multicancha 12 (Multicancha) ---
+   (Sin reservas)
+
+--- Cancha: Cancha de Fútbol 13 (Cancha de Fútbol) ---
+   (Sin reservas)
+
+--- Cancha: Multicancha 14 (Multicancha) ---
+   (Sin reservas)
+
+--- Cancha: Cancha de Fútbol 15 (Cancha de Fútbol) ---
+   (Sin reservas)
+
+--- Cancha: Multicancha 16 (Multicancha) ---
+   (Sin reservas)
+
+--- Cancha: Cancha de Fútbol 17 (Cancha de Fútbol) ---
+   (Sin reservas)
+
+--- Cancha: Multicancha 18 (Multicancha) ---
+   (Sin reservas)
+
+--- Cancha: Cancha de Fútbol 19 (Cancha de Fútbol) ---
+   (Sin reservas)
+
+------------------------------------------------------
+            CANCHAS MÁS SOLICITADAS
+------------------------------------------------------
+
+   - Estadio El Morro     (Cancha de Fútbol) | 10 reservas
+   - Multicancha Central  (Multicancha    ) | 10 reservas
+   - Multicancha Poniente (Multicancha    ) | 6 reservas
+   - Complejo Centenario  (Cancha de Fútbol) | 5 reservas
+   - Multicancha Plaza    (Multicancha    ) | 5 reservas
+   - Estadio Municipal    (Cancha de Fútbol) | 3 reservas
+   - Cancha de Pasto Norte (Cancha de Fútbol) | 2 reservas
+   - Cancha Parque O'Higgins (Cancha de Fútbol) | 2 reservas
+   - Cancha de Fútbol 3   (Cancha de Fútbol) | 1 reservas
+   - Multicancha Oriente  (Multicancha    ) | 1 reservas
+   - Cancha de Fútbol 4   (Cancha de Fútbol) | 1 reservas
+   - Multicancha Sur      (Multicancha    ) | 1 reservas
+   - Gimnasio Techado 1   (Multicancha    ) | 1 reservas
+   - Gimnasio Techado 2   (Multicancha    ) | 1 reservas
+   - Cancha Parque Forestal (Cancha de Fútbol) | 1 reservas
+   - Cancha de Fútbol 5   (Cancha de Fútbol) | 0 reservas
+   - Multicancha 6        (Multicancha    ) | 0 reservas
+   - Cancha de Fútbol 7   (Cancha de Fútbol) | 0 reservas
+   - Multicancha 8        (Multicancha    ) | 0 reservas
+   - Cancha de Fútbol 9   (Cancha de Fútbol) | 0 reservas
+   - Multicancha 10       (Multicancha    ) | 0 reservas
+   - Cancha de Fútbol 11  (Cancha de Fútbol) | 0 reservas
+   - Multicancha 12       (Multicancha    ) | 0 reservas
+   - Cancha de Fútbol 13  (Cancha de Fútbol) | 0 reservas
+   - Multicancha 14       (Multicancha    ) | 0 reservas
+   - Cancha de Fútbol 15  (Cancha de Fútbol) | 0 reservas
+   - Multicancha 16       (Multicancha    ) | 0 reservas
+   - Cancha de Fútbol 17  (Cancha de Fútbol) | 0 reservas
+   - Multicancha 18       (Multicancha    ) | 0 reservas
+   - Cancha de Fútbol 19  (Cancha de Fútbol) | 0 reservas
+
+------------------------------------------------------
+      SOCIOS FRECUENTES (Más de 10 reservas)
+------------------------------------------------------
+
+   - Joaquín Valenzuela        (15.111.240-1   ) | 12 reservas
+   - Carlos González           (15.111.222-3   ) | 12 reservas
+
+===================== FIN REPORTE =====================

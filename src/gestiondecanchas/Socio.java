@@ -17,35 +17,16 @@ public class Socio {
     }
 
     // ======= Getters =======
-
-    public String getRut() {
-        return rut;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public List<Reserva> getReservas() {
-        return reservas;
-    }
+    public String getRut() { return rut; }
+    public String getNombre() { return nombre; }
+    public String getTelefono() { return telefono; }
+    public List<Reserva> getReservas() { return reservas; }
 
     // ======= Setters =======
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
 
     // ======= Métodos de negocio =======
-
     /** Asocia una nueva reserva a este socio. */
     public void agregarReserva(Reserva r) {
         if (r != null && !reservas.contains(r)) {
@@ -59,7 +40,6 @@ public class Socio {
     }
 
     // ======= Utilidad =======
-
     @Override
     public String toString() {
         return "Socio{" +
@@ -69,9 +49,4 @@ public class Socio {
                 ", reservas=" + reservas.size() +
                 '}';
     }
-
-    Object getMisReservas() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 }

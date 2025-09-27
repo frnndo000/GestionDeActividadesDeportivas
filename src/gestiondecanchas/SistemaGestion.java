@@ -37,7 +37,7 @@ public class SistemaGestion {
         this.proximoIdReserva = maxId + 1;
     }
     
-        // --- NUEVOS MÉTODOS PARA GESTIONAR CANCHAS ---
+    // --- NUEVOS MÉTODOS PARA GESTIONAR CANCHAS ---
     public void agregarCancha(Cancha c) {
         if (c != null && getCancha(c.getId()) == null) {
             this.listaCanchas.add(c);
@@ -81,11 +81,11 @@ public class SistemaGestion {
     public Collection<Socio> getSocios() { return mapaSocios.values(); }
     
     public Collection<Socio> filtrarSociosFrecuentes(int minimoReservas) {
-    return this.mapaSocios.values()
-        .stream()
-        .filter(socio -> socio.getReservas().size() >= minimoReservas)
-        .collect(Collectors.toList());
-}
+        return this.mapaSocios.values()
+            .stream()
+            .filter(socio -> socio.getReservas().size() >= minimoReservas)
+            .collect(Collectors.toList());
+    }
 
     public void agregarOActualizarSocio(Socio socio) {
         this.mapaSocios.put(socio.getRut(), socio);
@@ -132,14 +132,29 @@ public class SistemaGestion {
                 .collect(Collectors.toList());
     }
 
-    /** Elimina una reserva por ID dentro de una cancha. */
+    /** Elimina una reserva por ID dentro de una cancha Y del socio. */
     public boolean eliminarReserva(int canchaId, int idReserva) {
         Cancha c = getCancha(canchaId);
         if (c == null) return false;
+        
+        Reserva reservaAEliminar = null;
+        for (Reserva r : c.getReservas()) {
+            if (r.getIdReserva() == idReserva) {
+                reservaAEliminar = r;
+                break;
+            }
+        }
+        
+        if (reservaAEliminar == null) return false;
+        
+        Socio socio = getSocioByRut(reservaAEliminar.getRutSocio());
+        if (socio != null) {
+            socio.eliminarReserva(reservaAEliminar);
+        }
+        
         return c.getReservas().removeIf(r -> r.getIdReserva() == idReserva);
     }
 
-    /** Edita la fecha de una reserva. */
     public boolean editarReservaFecha(int canchaId, int idReserva, LocalDate nuevaFecha) {
         Reserva r = buscarReserva(canchaId, idReserva);
         if (r == null) return false;

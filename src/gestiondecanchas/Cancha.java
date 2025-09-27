@@ -8,18 +8,13 @@ public class Cancha {
     private final int id;
     private String nombre;
     private final List<Reserva> reservas;
-    private TipoCancha tipo;  // Nuevo campo
+    private TipoCancha tipo;  
 
     public Cancha(int id, String nombre, TipoCancha tipo) {  // Constructor modificado
         this.id = id;
         this.nombre = nombre;
         this.reservas = new ArrayList<>();
         this.tipo = tipo;
-    }
-    
-    // Constructor antiguo para compatibilidad (opcional)
-    public Cancha(int id, String nombre) {
-        this(id, nombre, TipoCancha.MULTICANCHA); // Valor por defecto
     }
     
     public int getId() { return id; }

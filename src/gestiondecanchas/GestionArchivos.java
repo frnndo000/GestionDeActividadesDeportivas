@@ -33,19 +33,26 @@ public class GestionArchivos {
     }
     
         public void cargarCanchas(SistemaGestion sistema) {
-        try {
-            List<String> lines = Files.readAllLines(FILE_CANCHAS, StandardCharsets.UTF_8);
-            for (String line : lines) {
-                if (line.isBlank()) continue;
-                String[] p = line.split(",", -1);
-                if (p.length < 2) continue; // id,nombre
-                Cancha c = new Cancha(Integer.parseInt(p[0].trim()), p[1].trim());
+    try {
+        List<String> lines = Files.readAllLines(FILE_CANCHAS, StandardCharsets.UTF_8);
+        for (String line : lines) {
+            if (line.isBlank()) continue;
+            String[] p = line.split(",", -1);
+            if (p.length < 3) continue; // id,nombre,tipo
+            try {
+                int id = Integer.parseInt(p[0].trim());
+                String nombre = p[1].trim();
+                TipoCancha tipo = TipoCancha.valueOf(p[2].trim());
+                Cancha c = new Cancha(id, nombre, tipo);
                 sistema.agregarCancha(c);
+            } catch (IllegalArgumentException e) {
+                System.err.println("Tipo de cancha inválido en CSV: " + line);
             }
-        } catch (IOException e) {
-            System.err.println("Error leyendo canchas.csv: " + e.getMessage());
         }
+    } catch (IOException e) {
+        System.err.println("Error leyendo canchas.csv: " + e.getMessage());
     }
+}
 
     // ===================== CARGA =====================
 

@@ -8,17 +8,27 @@ public class Cancha {
     private final int id;
     private String nombre;
     private final List<Reserva> reservas;
+    private TipoCancha tipo;  // Nuevo campo
 
-    public Cancha(int id, String nombre) {
+    public Cancha(int id, String nombre, TipoCancha tipo) {  // Constructor modificado
         this.id = id;
         this.nombre = nombre;
         this.reservas = new ArrayList<>();
+        this.tipo = tipo;
+    }
+    
+    // Constructor antiguo para compatibilidad (opcional)
+    public Cancha(int id, String nombre) {
+        this(id, nombre, TipoCancha.MULTICANCHA); // Valor por defecto
     }
     
     public int getId() { return id; }
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
     public List<Reserva> getReservas() { return new ArrayList<>(this.reservas); }
+    public TipoCancha getTipo() { return tipo; }  // Nuevo getter
+    public void setTipo(TipoCancha tipo) { this.tipo = tipo; }  // Nuevo setter
+    
     // ======= Operaciones =======
     /** Agrega una reserva a esta cancha. (No valida solapamientos) */
     public void agregarReserva(Reserva r) {
@@ -61,6 +71,6 @@ public class Cancha {
     // ======= Utilidad =======
     @Override
     public String toString() {
-        return nombre + " (ID " + id + ")";
+        return nombre + " (" + tipo.getNombre() + " - ID " + id + ")";
     }
 }

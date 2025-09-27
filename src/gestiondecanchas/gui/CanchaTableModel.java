@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CanchaTableModel extends AbstractTableModel {
-    private final String[] columnNames = {"ID", "Nombre"};
+    private final String[] columnNames = {"ID", "Nombre", "Tipo"};  // Columna añadida
     private List<Cancha> canchas;
 
     public CanchaTableModel(List<Cancha> canchas) {
@@ -36,16 +36,17 @@ public class CanchaTableModel extends AbstractTableModel {
                 return cancha.getId();
             case 1:
                 return cancha.getNombre();
+            case 2:  // Nueva columna para el tipo
+                return cancha.getTipo().getNombre();
             default:
                 return null;
         }
     }
 
-    // --- MÉTODOS PARA ACTUALIZAR LA TABLA (AQUÍ ESTÁ LA SOLUCIÓN) ---
-    
+    // --- MÉTODOS PARA ACTUALIZAR LA TABLA ---
     public void setData(List<Cancha> nuevasCanchas) {
         this.canchas = new ArrayList<>(nuevasCanchas);
-        fireTableDataChanged(); // Notifica a la tabla que los datos cambiaron
+        fireTableDataChanged();
     }
     
     public Cancha getAt(int row) {

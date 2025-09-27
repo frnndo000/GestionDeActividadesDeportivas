@@ -110,7 +110,7 @@ public class PanelReservas extends JPanel {
             } else {
                 new GestionArchivos().guardarReservas(sistema);
             }
-            cargarTabla();
+            cargarTabla(); // Esta línea es crucial - refresca la tabla
         });
 
         btnVolver.addActionListener(e -> frame.cambiarPanel(new PanelMenuPrincipal(frame, sistema)));

@@ -13,18 +13,13 @@ public class SistemaGestion {
         this.listaCanchas = new ArrayList<>();
         this.mapaSocios = new HashMap<>();
 
-        // --- LÓGICA DE CARGA ACTUALIZADA ---
         GestionArchivos ga = new GestionArchivos();
-        ga.cargarCanchas(this); // 1. Carga las canchas primero
-        ga.cargarSocios(this);  // 2. Carga los socios
-        ga.cargarReservas(this);// 3. Carga las reservas y las asocia a las canchas y socios ya cargados
-
+        ga.cargarCanchas(this);
+        ga.cargarSocios(this);
+        ga.cargarReservas(this);
         sincronizarProximoId();
     }
 
-    // ======= Métodos internos =======
-
-    /** Ajusta el próximo ID de reserva al máximo existente + 1. */
     private void sincronizarProximoId() {
         int maxId = 0;
         for (Cancha c : listaCanchas) {
@@ -37,7 +32,6 @@ public class SistemaGestion {
         this.proximoIdReserva = maxId + 1;
     }
     
-    // --- NUEVOS MÉTODOS PARA GESTIONAR CANCHAS ---
     public void agregarCancha(Cancha c) {
         if (c != null && getCancha(c.getId()) == null) {
             this.listaCanchas.add(c);
@@ -45,20 +39,16 @@ public class SistemaGestion {
     }
 
     public boolean eliminarCancha(int id) {
-        // Advertencia: Esto no elimina las reservas asociadas de los socios.
-        // En un sistema real, se necesitaría una lógica más compleja aquí.
         return this.listaCanchas.removeIf(c -> c.getId() == id);
     }
     
     public int getProximoIdCancha() {
-        // Busca el ID más alto existente y le suma 1
         return listaCanchas.stream()
                 .mapToInt(Cancha::getId)
                 .max()
                 .orElse(0) + 1;
     }
 
-    /** Busca una reserva específica en una cancha. */
     private Reserva buscarReserva(int canchaId, int idReserva) {
         Cancha c = getCancha(canchaId);
         if (c == null) return null;
@@ -68,16 +58,10 @@ public class SistemaGestion {
         return null;
     }
 
-    // ======= Gestión de IDs =======
-
-    /** Devuelve y avanza el próximo ID de reserva. */
     public int getProximoIdReserva() {
         return proximoIdReserva++;
     }
     
-
-    // ======= Gestión de socios =======
-
     public Collection<Socio> getSocios() { return mapaSocios.values(); }
     
     public Collection<Socio> filtrarSociosFrecuentes(int minimoReservas) {
@@ -99,8 +83,6 @@ public class SistemaGestion {
         mapaSocios.remove(rut);
     }
 
-    // ======= Gestión de canchas =======
-
     public List<Cancha> getListaCanchas() {
         return new ArrayList<>(this.listaCanchas);
     }
@@ -112,16 +94,12 @@ public class SistemaGestion {
         return null;
     }
 
-    // ======= Gestión de reservas (2ª colección anidada) =======
-
-    /** Devuelve todas las reservas de todas las canchas. */
     public List<Reserva> getTodasLasReservas() {
         List<Reserva> out = new ArrayList<>();
         for (Cancha c : listaCanchas) out.addAll(c.getReservas());
         return out;
     }
 
-    /** Lista reservas de una cancha ordenadas por fecha y bloque. */
     public List<Reserva> listarReservasOrdenadas(int canchaId) {
         Cancha c = getCancha(canchaId);
         if (c == null) return Collections.emptyList();
@@ -132,27 +110,30 @@ public class SistemaGestion {
                 .collect(Collectors.toList());
     }
 
-    /** Elimina una reserva por ID dentro de una cancha Y del socio. */
+    /** Elimina una reserva por ID dentro de una cancha */
     public boolean eliminarReserva(int canchaId, int idReserva) {
         Cancha c = getCancha(canchaId);
         if (c == null) return false;
         
-        Reserva reservaAEliminar = null;
+        // Buscar la reserva para obtener info del socio
+        Reserva reserva = null;
         for (Reserva r : c.getReservas()) {
             if (r.getIdReserva() == idReserva) {
-                reservaAEliminar = r;
+                reserva = r;
                 break;
             }
         }
         
-        if (reservaAEliminar == null) return false;
+        if (reserva == null) return false;
         
-        Socio socio = getSocioByRut(reservaAEliminar.getRutSocio());
+        // Eliminar del socio si existe
+        Socio socio = getSocioByRut(reserva.getRutSocio());
         if (socio != null) {
-            socio.eliminarReserva(reservaAEliminar);
+            socio.eliminarReserva(reserva);
         }
         
-        return c.getReservas().removeIf(r -> r.getIdReserva() == idReserva);
+        // Eliminar de la cancha
+        return c.eliminarReservaPorId(idReserva);
     }
 
     public boolean editarReservaFecha(int canchaId, int idReserva, LocalDate nuevaFecha) {
@@ -162,7 +143,6 @@ public class SistemaGestion {
         return true;
     }
 
-    /** Edita el bloque de una reserva (usa BloqueHorario). */
     public boolean editarReservaBloque(int canchaId, int idReserva, BloqueHorario nuevoBloque) {
         Reserva r = buscarReserva(canchaId, idReserva);
         if (r == null) return false;

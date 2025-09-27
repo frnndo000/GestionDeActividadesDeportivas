@@ -74,9 +74,13 @@ public class SistemaGestion {
     public void agregarOActualizarSocio(Socio socio) {
         this.mapaSocios.put(socio.getRut(), socio);
     }
-
-    public Socio getSocioByRut(String rut) {
-        return this.mapaSocios.get(rut);
+    
+    public Socio getSocioByRut(String rut) throws SocioNoEncontradoException {
+        Socio socio = this.mapaSocios.get(rut);
+        if (socio == null) {
+            throw new SocioNoEncontradoException("El socio con RUT " + rut + " no fue encontrado.");
+        }
+        return socio;
     }
 
     public void eliminarSocio(String rut) {
@@ -90,18 +94,6 @@ public class SistemaGestion {
     public Cancha getCancha(int id) {
         for (Cancha cancha : listaCanchas) {
             if (cancha.getId() == id) return cancha;
-        }
-        return null;
-    }
-    
-    public Cancha getCancha(String nombre) {
-        if (nombre == null || nombre.trim().isEmpty()) {
-            return null;
-        }
-        for (Cancha cancha : listaCanchas) {
-            if (cancha.getNombre().equalsIgnoreCase(nombre.trim())) {
-                return cancha;
-            }
         }
         return null;
     }
@@ -121,6 +113,37 @@ public class SistemaGestion {
                         .thenComparing(Reserva::getBloque))
                 .collect(Collectors.toList());
     }
+    
+    public Reserva crearReserva(String rutSocio, int idCancha, LocalDate fecha, BloqueHorario bloque)
+            throws SocioNoEncontradoException, ReservaConflictException {
+
+        // 1. Validar que el socio exista (esto ya lanza la excepción)
+        Socio socio = getSocioByRut(rutSocio);
+
+        // 2. Validar que la cancha exista
+        Cancha cancha = getCancha(idCancha);
+        if (cancha == null) {
+            // Este es un caso de error que no debería ocurrir si la GUI funciona bien
+            throw new IllegalArgumentException("La cancha con ID " + idCancha + " no existe.");
+        }
+
+        // 3. Lanzar nuestra excepción si la cancha no está disponible
+        if (!cancha.estaDisponible(fecha, bloque)) {
+            throw new ReservaConflictException("La cancha '" + cancha.getNombre() + "' ya está ocupada en ese horario.");
+        }
+
+        // 4. Si todo es válido, crear la reserva
+        int nuevoId = getProximoIdReserva();
+        Reserva nuevaReserva = new Reserva(nuevoId, cancha.getId(), socio.getRut(), fecha, bloque);
+
+        cancha.agregarReserva(nuevaReserva);
+        socio.agregarReserva(nuevaReserva);
+
+        // 5. Persistir en el archivo
+        new GestionArchivos().agregarReservaACSV(nuevaReserva);
+
+        return nuevaReserva;
+    }
 
     /** Elimina una reserva por ID dentro de una cancha */
     public boolean eliminarReserva(int canchaId, int idReserva) {
@@ -139,9 +162,13 @@ public class SistemaGestion {
         if (reserva == null) return false;
         
         // Eliminar del socio si existe
-        Socio socio = getSocioByRut(reserva.getRutSocio());
-        if (socio != null) {
+        try {
+            Socio socio = getSocioByRut(reserva.getRutSocio());
             socio.eliminarReserva(reserva);
+        } catch (SocioNoEncontradoException e) {
+            // Si el socio no se encuentra, simplemente lo ignoramos y continuamos.
+            // Opcional: puedes imprimir un mensaje en la consola de error.
+            System.err.println("Advertencia al eliminar reserva: " + e.getMessage());
         }
         
         // Eliminar de la cancha

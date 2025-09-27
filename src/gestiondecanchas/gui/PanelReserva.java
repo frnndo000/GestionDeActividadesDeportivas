@@ -94,32 +94,53 @@ public class PanelReserva extends JPanel {
             return;
         }
 
-        // Buscar o crear socio
+        // Si el socio no existe, el flujo de obtenerOCrearSocio ya lo maneja
         Socio socio = obtenerOCrearSocio(rut);
-        if (socio == null) return;
-
-        BloqueHorario bloqueSeleccionado = (BloqueHorario) cmbBloque.getSelectedItem();
-        if (bloqueSeleccionado == null) {
-            JOptionPane.showMessageDialog(this, "No hay horarios disponibles para la selección actual.", "Sin Horarios", JOptionPane.WARNING_MESSAGE);
+        if (socio == null) {
+            // El usuario canceló la creación del nuevo socio
             return;
         }
 
+        BloqueHorario bloqueSeleccionado = (BloqueHorario) cmbBloque.getSelectedItem();
         Cancha canchaSeleccionada = (Cancha) cmbCanchas.getSelectedItem();
         LocalDate fecha = obtenerProximoDiaSemana(DayOfWeek.of(cmbDia.getSelectedIndex() + 1));
         
-        if (canchaSeleccionada.estaDisponible(fecha, bloqueSeleccionado)) {
-            crearReserva(socio, canchaSeleccionada, fecha, bloqueSeleccionado);
-        } else {
-            JOptionPane.showMessageDialog(this, "La cancha ya no está disponible en el horario seleccionado.", "No Disponible", JOptionPane.WARNING_MESSAGE);
-            actualizarBloquesDisponibles(); // Refrescar disponibilidad
+        if (bloqueSeleccionado == null || canchaSeleccionada == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una cancha y un horario válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            // Llamamos al nuevo método centralizado en SistemaGestion
+            Reserva nuevaReserva = sistema.crearReserva(socio.getRut(), canchaSeleccionada.getId(), fecha, bloqueSeleccionado);
+            
+            // Si todo sale bien, mostramos la confirmación
+            String mensaje = String.format(
+                "¡Reserva creada exitosamente!\n\nSocio: %s (%s)\nCancha: %s\nFecha: %s\nHorario: %s\nID Reserva: %d",
+                socio.getNombre(), socio.getRut(),
+                canchaSeleccionada.getNombre(),
+                fecha,
+                bloqueSeleccionado.getDescripcion(),
+                nuevaReserva.getIdReserva()
+            );
+            JOptionPane.showMessageDialog(this, mensaje, "Reserva Confirmada", JOptionPane.INFORMATION_MESSAGE);
+            ventana.cambiarPanel(new PanelMenuPrincipal(ventana, sistema));
+
+        } catch (ReservaConflictException | SocioNoEncontradoException e) {
+            // Si ocurre cualquiera de nuestras dos excepciones, mostramos el mensaje de error
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error de Reserva", JOptionPane.WARNING_MESSAGE);
+            actualizarBloquesDisponibles(); // Actualizamos por si otro usuario reservó mientras tanto
         }
     }
 
     private Socio obtenerOCrearSocio(String rut) {
-        Socio socio = sistema.getSocioByRut(rut);
-        
-        if (socio == null) {
-            // Crear nuevo socio
+        Socio socio = null;
+        try {
+            // Intenta obtener el socio
+            socio = sistema.getSocioByRut(rut);
+        } catch (SocioNoEncontradoException e) {
+            // Si no se encuentra, se procede a crear uno nuevo
+            // (El resto de tu lógica para crear un socio va aquí, como ya la tienes)
             SocioForm dialog = new SocioForm(SwingUtilities.getWindowAncestor(this), rut);
             dialog.setVisible(true);
             
@@ -133,7 +154,6 @@ public class PanelReserva extends JPanel {
                 return null;
             }
         }
-        
         return socio;
     }
 

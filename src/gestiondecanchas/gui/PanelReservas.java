@@ -4,6 +4,7 @@ import gestiondecanchas.SistemaGestion;
 import gestiondecanchas.Cancha;
 import gestiondecanchas.Reserva;
 import gestiondecanchas.Socio;
+import gestiondecanchas.SocioNoEncontradoException;
 import gestiondecanchas.BloqueHorario;
 import gestiondecanchas.GestionArchivos;
 import gestiondecanchas.TipoCancha;
@@ -14,7 +15,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator; // -> Importar Comparator para ordenar
+import java.util.Comparator;
 import java.util.List;
 
 public class PanelReservas extends JPanel {
@@ -203,16 +204,20 @@ public class PanelReservas extends JPanel {
         }
         
         for (Reserva r : this.reservasMostradas) {
+        String nombreSocio = "Socio no encontrado";
+        String telefonoSocio = "N/A";
+
+        try {
             Socio socio = sistema.getSocioByRut(r.getRutSocio());
+            // Si el método tiene éxito (no lanza excepción), actualizamos los datos
+            nombreSocio = socio.getNombre();
+            telefonoSocio = socio.getTelefono();
+        } catch (SocioNoEncontradoException e) {
+            // Si la excepción ocurre, no hacemos nada.
+            // Las variables se quedan con sus valores por defecto ("Socio no encontrado").
+        }
             Cancha canchaDeLaReserva = sistema.getCancha(r.getCanchaId());
 
-            String nombreSocio = "Socio no encontrado";
-            String telefonoSocio = "N/A";
-            if (socio != null) {
-                nombreSocio = socio.getNombre();
-                telefonoSocio = socio.getTelefono();
-            }
-            
             String nombreCancha = "Desconocida";
             if(canchaDeLaReserva != null){
                 nombreCancha = canchaDeLaReserva.getNombre();

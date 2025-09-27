@@ -177,32 +177,6 @@ public class GestionArchivos {
     private static String safe(String s) {
         return s == null ? "" : s.replace(",", " "); // evita romper CSV con comas
     }
-    
-    // === Métodos de compatibilidad con GestionDeCanchas ===
-
-    // Append de un socio (rut,nombre,telefono) a socios.csv
-    public void agregarSocioACSV(Socio s) {
-        String row = String.join(",",
-                s.getRut(),
-                s.getNombre() == null ? "" : s.getNombre().replace(",", " "),
-                s.getTelefono() == null ? "" : s.getTelefono().replace(",", " ")
-        );
-        try (java.io.BufferedWriter bw = java.nio.file.Files.newBufferedWriter(
-                java.nio.file.Paths.get("data").resolve("socios.csv"),
-                java.nio.charset.StandardCharsets.UTF_8,
-                java.nio.file.StandardOpenOption.APPEND)) {
-            bw.write(row);
-            bw.newLine();
-        } catch (java.io.IOException e) {
-            System.err.println("No se pudo agregar socio a socios.csv: " + e.getMessage());
-        }
-    }
-
-    // Alias de guardarReservas(sistema)
-    public void actualizarArchivoReservas(SistemaGestion sistema) {
-        guardarReservas(sistema);
-    }
-
 }
 
 

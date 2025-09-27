@@ -8,21 +8,22 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 public class PanelReserva extends JPanel {
 
-    // Declaramos los componentes como atributos de la clase para poder acceder a ellos
     private final JComboBox<String> cmbDia;
     private final JComboBox<BloqueHorario> cmbBloque;
     private final JComboBox<Cancha> cmbCanchas;
     private final SistemaGestion sistema;
+    private final VentanaPrincipal ventana;
+    private final JTextField txtRut;
 
     public PanelReserva(VentanaPrincipal ventana, SistemaGestion sistema) {
-        this.sistema = sistema; // Guardamos la referencia al sistema
+        this.ventana = ventana;
+        this.sistema = sistema;
+        
         setLayout(new GridBagLayout());
         setBorder(new EmptyBorder(20, 20, 20, 20));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -33,14 +34,14 @@ public class PanelReserva extends JPanel {
         JLabel lblTitulo = new JLabel("Nueva Reserva", SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
         JLabel lblRut = new JLabel("RUT del Socio:");
-        JTextField txtRut = new JTextField(20);
+        txtRut = new JTextField(20);
         JLabel lblDia = new JLabel("Día de la Reserva:");
         cmbDia = new JComboBox<>(new String[]{"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"});
         JLabel lblCancha = new JLabel("Cancha:");
         cmbCanchas = new JComboBox<>();
         for (Cancha cancha : sistema.getListaCanchas()) cmbCanchas.addItem(cancha);
         JLabel lblBloque = new JLabel("Horario Disponible:");
-        cmbBloque = new JComboBox<>(); // Lo inicializamos vacío
+        cmbBloque = new JComboBox<>();
 
         JButton btnConfirmar = new JButton("Confirmar Reserva");
         JButton btnVolver = new JButton("Volver al Menú");
@@ -61,53 +62,103 @@ public class PanelReserva extends JPanel {
         gbc.gridx = 0; add(btnVolver, gbc);
 
         // --- LÓGICA DE EVENTOS DINÁMICOS ---
-        
-        // Creamos un "escuchador" que se activará cuando cambie el día o la cancha
         ActionListener actualizadorDeBloques = e -> actualizarBloquesDisponibles();
         cmbDia.addActionListener(actualizadorDeBloques);
         cmbCanchas.addActionListener(actualizadorDeBloques);
         
         // --- Lógica de Botones ---
-        btnConfirmar.addActionListener(e -> {
-            // ... (lógica para obtener y validar el socio) ...
-            Socio socio = sistema.getSocioByRut(txtRut.getText().trim());
-            if (socio == null) { /* ...manejo de socio no encontrado... */ return; }
-
-            BloqueHorario bloqueSeleccionado = (BloqueHorario) cmbBloque.getSelectedItem();
-            
-            // Si no hay horarios disponibles, el JComboBox estará vacío
-            if (bloqueSeleccionado == null) {
-                JOptionPane.showMessageDialog(this, "No hay horarios disponibles para la selección actual.", "Sin Horarios", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            Cancha canchaSeleccionada = (Cancha) cmbCanchas.getSelectedItem();
-            LocalDate fecha = obtenerProximoDiaSemana(DayOfWeek.of(cmbDia.getSelectedIndex() + 1));
-            
-            // Aunque ya filtramos, hacemos una última verificación por si acaso
-            if (canchaSeleccionada.estaDisponible(fecha, bloqueSeleccionado)) {
-                // ... (lógica para crear y guardar la reserva que ya tenías) ...
-                int nuevoId = sistema.getProximoIdReserva();
-                Reserva nuevaReserva = new Reserva(nuevoId, canchaSeleccionada.getId(), socio.getRut(), fecha, bloqueSeleccionado);
-                canchaSeleccionada.agregarReserva(nuevaReserva);
-                socio.agregarReserva(nuevaReserva);
-                new GestionArchivos().agregarReservaACSV(nuevaReserva);
-                
-                JOptionPane.showMessageDialog(this, "Reserva creada exitosamente para " + socio.getNombre());
-                ventana.cambiarPanel(new PanelMenuPrincipal(ventana, sistema));
-            }
-        });
-        
+        btnConfirmar.addActionListener(e -> confirmarReserva());
         btnVolver.addActionListener(e -> ventana.cambiarPanel(new PanelMenuPrincipal(ventana, sistema)));
 
         // --- Carga Inicial ---
-        actualizarBloquesDisponibles(); // Llama al método una vez para la carga inicial
+        actualizarBloquesDisponibles();
     }
 
-    /**
-     * Este método se encarga de actualizar la lista de bloques horarios
-     * basándose en el día y la cancha seleccionados.
-     */
+    private void confirmarReserva() {
+        String rut = txtRut.getText().trim();
+        if (rut.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar un RUT.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Buscar o crear socio
+        Socio socio = obtenerOCrearSocio(rut);
+        if (socio == null) return;
+
+        BloqueHorario bloqueSeleccionado = (BloqueHorario) cmbBloque.getSelectedItem();
+        if (bloqueSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, "No hay horarios disponibles para la selección actual.", "Sin Horarios", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Cancha canchaSeleccionada = (Cancha) cmbCanchas.getSelectedItem();
+        LocalDate fecha = obtenerProximoDiaSemana(DayOfWeek.of(cmbDia.getSelectedIndex() + 1));
+        
+        if (canchaSeleccionada.estaDisponible(fecha, bloqueSeleccionado)) {
+            crearReserva(socio, canchaSeleccionada, fecha, bloqueSeleccionado);
+        } else {
+            JOptionPane.showMessageDialog(this, "La cancha ya no está disponible en el horario seleccionado.", "No Disponible", JOptionPane.WARNING_MESSAGE);
+            actualizarBloquesDisponibles(); // Refrescar disponibilidad
+        }
+    }
+
+    private Socio obtenerOCrearSocio(String rut) {
+        Socio socio = sistema.getSocioByRut(rut);
+        
+        if (socio == null) {
+            // Crear nuevo socio
+            SocioForm dialog = new SocioForm(SwingUtilities.getWindowAncestor(this), rut);
+            dialog.setVisible(true);
+            
+            if (dialog.isOk()) {
+                socio = dialog.getSocio();
+                sistema.agregarOActualizarSocio(socio);
+                new GestionArchivos().guardarSocios(sistema);
+                JOptionPane.showMessageDialog(this, "Socio registrado exitosamente!", "Nuevo Socio", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Se requiere registrar el socio para hacer reservas.", "Registro Requerido", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+        }
+        
+        return socio;
+    }
+
+    private void crearReserva(Socio socio, Cancha cancha, LocalDate fecha, BloqueHorario bloque) {
+        try {
+            int nuevoId = sistema.getProximoIdReserva();
+            Reserva nuevaReserva = new Reserva(nuevoId, cancha.getId(), socio.getRut(), fecha, bloque);
+            
+            cancha.agregarReserva(nuevaReserva);
+            socio.agregarReserva(nuevaReserva);
+            
+            // Guardar en archivo
+            GestionArchivos ga = new GestionArchivos();
+            ga.agregarReservaACSV(nuevaReserva);
+            
+            // Mostrar confirmación
+            String mensaje = String.format(
+                "Reserva creada exitosamente!\n\n" +
+                "Socio: %s (%s)\n" +
+                "Cancha: %s\n" +
+                "Fecha: %s\n" +
+                "Horario: %s\n" +
+                "ID Reserva: %d",
+                socio.getNombre(), socio.getRut(),
+                cancha.getNombre(),
+                fecha.toString(),
+                bloque.getDescripcion(),
+                nuevoId
+            );
+            
+            JOptionPane.showMessageDialog(this, mensaje, "Reserva Confirmada", JOptionPane.INFORMATION_MESSAGE);
+            ventana.cambiarPanel(new PanelMenuPrincipal(ventana, sistema));
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al crear la reserva: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void actualizarBloquesDisponibles() {
         Cancha canchaSeleccionada = (Cancha) cmbCanchas.getSelectedItem();
         if (canchaSeleccionada == null) return;
@@ -115,18 +166,20 @@ public class PanelReserva extends JPanel {
         DayOfWeek diaSeleccionado = DayOfWeek.of(cmbDia.getSelectedIndex() + 1);
         LocalDate fecha = obtenerProximoDiaSemana(diaSeleccionado);
 
-        // Creamos un modelo nuevo para el JComboBox de bloques
         DefaultComboBoxModel<BloqueHorario> modeloBloques = new DefaultComboBoxModel<>();
         
-        // Recorremos todos los bloques posibles y añadimos solo los que están libres
         for (BloqueHorario bloque : BloqueHorario.values()) {
             if (canchaSeleccionada.estaDisponible(fecha, bloque)) {
                 modeloBloques.addElement(bloque);
             }
         }
         
-        // Asignamos el nuevo modelo al JComboBox
         cmbBloque.setModel(modeloBloques);
+        
+        // Actualizar label con la fecha seleccionada
+        if (cmbBloque.getItemCount() > 0) {
+            cmbBloque.setSelectedIndex(0);
+        }
     }
     
     private LocalDate obtenerProximoDiaSemana(DayOfWeek diaSemana) {

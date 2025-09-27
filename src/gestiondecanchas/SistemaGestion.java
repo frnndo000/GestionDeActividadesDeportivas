@@ -81,11 +81,11 @@ public class SistemaGestion {
     public Collection<Socio> getSocios() { return mapaSocios.values(); }
     
     public Collection<Socio> filtrarSociosFrecuentes(int minimoReservas) {
-        return this.mapaSocios.values()
-            .stream()
-            .filter(socio -> socio.getMisReservas().size() >= minimoReservas)
-            .collect(Collectors.toList());
-    }
+    return this.mapaSocios.values()
+        .stream()
+        .filter(socio -> socio.getReservas().size() >= minimoReservas)
+        .collect(Collectors.toList());
+}
 
     public void agregarOActualizarSocio(Socio socio) {
         this.mapaSocios.put(socio.getRut(), socio);

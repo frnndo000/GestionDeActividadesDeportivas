@@ -58,11 +58,6 @@ public class Cancha {
         return true;
     }
 
-    // ======= Compatibilidad con GestionDeCanchas =======
-    public void cancelarReserva(Reserva r) {
-        eliminarReserva(r);
-    }
-
     // ======= Utilidad =======
     @Override
     public String toString() {

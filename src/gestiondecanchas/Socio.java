@@ -69,13 +69,9 @@ public class Socio {
                 ", reservas=" + reservas.size() +
                 '}';
     }
-    // === Compatibilidad con GestionDeCanchas ===
-    public java.util.List<Reserva> getMisReservas() {
-        return getReservas(); // alias
-    }
 
-    public void cancelarReserva(Reserva r) {
-        eliminarReserva(r); // alias
+    Object getMisReservas() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

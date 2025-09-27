@@ -35,7 +35,7 @@ public class SocioTableModel extends AbstractTableModel {
             case 1 -> s.getNombre();
             case 2 -> s.getTelefono();
             // Para la columna 3, obtenemos el tamaño de la lista de reservas del socio
-            case 3 -> s.getMisReservas().size(); 
+            case 3 -> s.getReservas().size();
             default -> "";
         };
     }

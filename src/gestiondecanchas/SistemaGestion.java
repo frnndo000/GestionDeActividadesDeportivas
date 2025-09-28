@@ -1,5 +1,7 @@
+// Terminado
+
 package gestiondecanchas;
-//mensaje de prueba
+
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -117,29 +119,23 @@ public class SistemaGestion {
     public Reserva crearReserva(String rutSocio, int idCancha, LocalDate fecha, BloqueHorario bloque)
             throws SocioNoEncontradoException, ReservaConflictException {
 
-        // 1. Validar que el socio exista (esto ya lanza la excepción)
         Socio socio = getSocioByRut(rutSocio);
 
-        // 2. Validar que la cancha exista
         Cancha cancha = getCancha(idCancha);
         if (cancha == null) {
-            // Este es un caso de error que no debería ocurrir si la GUI funciona bien
             throw new IllegalArgumentException("La cancha con ID " + idCancha + " no existe.");
         }
 
-        // 3. Lanzar nuestra excepción si la cancha no está disponible
         if (!cancha.estaDisponible(fecha, bloque)) {
             throw new ReservaConflictException("La cancha '" + cancha.getNombre() + "' ya está ocupada en ese horario.");
         }
 
-        // 4. Si todo es válido, crear la reserva
         int nuevoId = getProximoIdReserva();
         Reserva nuevaReserva = new Reserva(nuevoId, cancha.getId(), socio.getRut(), fecha, bloque);
 
         cancha.agregarReserva(nuevaReserva);
         socio.agregarReserva(nuevaReserva);
 
-        // 5. Persistir en el archivo
         new GestionArchivos().agregarReservaACSV(nuevaReserva);
 
         return nuevaReserva;
@@ -166,12 +162,8 @@ public class SistemaGestion {
             Socio socio = getSocioByRut(reserva.getRutSocio());
             socio.eliminarReserva(reserva);
         } catch (SocioNoEncontradoException e) {
-            // Si el socio no se encuentra, simplemente lo ignoramos y continuamos.
-            // Opcional: puedes imprimir un mensaje en la consola de error.
             System.err.println("Advertencia al eliminar reserva: " + e.getMessage());
         }
-        
-        // Eliminar de la cancha
         return c.eliminarReservaPorId(idReserva);
     }
 

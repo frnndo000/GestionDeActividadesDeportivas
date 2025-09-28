@@ -1,6 +1,6 @@
 ======================================================
         REPORTE DE RESERVAS DEL SISTEMA
-    Generado el: 2025-09-27T20:52:42.128295700
+    Generado el: 2025-09-27T22:46:21.581078400
 ======================================================
 
 ------------------------------------------------------
@@ -78,7 +78,7 @@
    - ID: 23   | Fecha: 2025-10-09 | Horario: 20:00 - 21:00   | Socio: Joaquín Valenzuela (15.111.240-1)
 
 --- Cancha: Cancha Parque Forestal (Cancha de Fútbol) ---
-   - ID: 24   | Fecha: 2025-10-09 | Horario: 21:00 - 22:00   | Socio: Joaquín Valenzuela (15.111.240-1)
+   - ID: 24   | Fecha: 2025-10-10 | Horario: 21:00 - 22:00   | Socio: Joaquín Valenzuela (15.111.240-1)
 
 --- Cancha: Multicancha Plaza (Multicancha) ---
    - ID: 8    | Fecha: 2025-10-04 | Horario: 18:00 - 19:00   | Socio: Joaquín Valenzuela (15.111.240-1)

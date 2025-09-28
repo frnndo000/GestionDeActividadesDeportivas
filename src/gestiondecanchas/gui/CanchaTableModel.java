@@ -42,6 +42,15 @@ public class CanchaTableModel extends AbstractTableModel {
                 return null;
         }
     }
+    
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return switch (columnIndex) {
+            case 0 -> Integer.class; 
+            case 1, 2 -> String.class; 
+            default -> Object.class;
+        };
+    }
 
     // --- MÉTODOS PARA ACTUALIZAR LA TABLA ---
     public void setData(List<Cancha> nuevasCanchas) {
